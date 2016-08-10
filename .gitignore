@@ -1,0 +1,7 @@
+build/
+vendor/
+data/
+.idea/
+composer.phar
+tests.sh
+tests/data/out
