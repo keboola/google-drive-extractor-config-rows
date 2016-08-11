@@ -23,7 +23,7 @@ class ClientTest extends BaseTest
 
     public function testGetFile()
     {
-        $fileId = '1tep21r8fDJyXJyMAo2KKqBrxaEmqoJuwnQB4Y6gqGBU';
+        $fileId = getenv('FILE_ID');
         $file = $this->client->getFile($fileId);
 
         $this->assertArrayHasKey('id', $file);
@@ -34,8 +34,8 @@ class ClientTest extends BaseTest
 
     public function testExport()
     {
-        $fileId = '1tep21r8fDJyXJyMAo2KKqBrxaEmqoJuwnQB4Y6gqGBU';
-        $sheetId = 10;
+        $fileId = getenv('FILE_ID');
+        $sheetId = getenv('SHEET_ID');
         $meta = $this->client->getFile($fileId);
 
         if (isset($meta['exportLinks']['text/csv'])) {
@@ -46,7 +46,8 @@ class ClientTest extends BaseTest
 
         $content = $this->client->export($exportLink);
 
-        var_dump($content); die;
+        $this->assertInstanceOf('GuzzleHttp\Psr7\Stream', $content);
+        $this->assertGreaterThan(0, $content->getSize());
     }
 
 }

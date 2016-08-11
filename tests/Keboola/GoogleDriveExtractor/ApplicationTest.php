@@ -7,7 +7,6 @@
  * Time: 10:59
  */
 
-use GuzzleHttp\Client;
 use Keboola\GoogleDriveExtractor\Application;
 use Keboola\GoogleDriveExtractor\Test\BaseTest;
 use Symfony\Component\Filesystem\Filesystem;
@@ -29,7 +28,7 @@ class ApplicationTest extends BaseTest
     {
         $this->application->run();
 
-        $salesOutputPath = ROOT_PATH . '/tests/data/out/tables/1tep21r8fDJyXJyMAo2KKqBrxaEmqoJuwnQB4Y6gqGBU-10.csv';
+        $salesOutputPath = ROOT_PATH . '/tests/data/out/tables/1tep21r8fDJyXJyMAo2KKqBrxaEmqoJuwnQB4Y6gqGBU_10_out.csv';
         $salesManifestPath = $salesOutputPath . '.manifest';
 
         $this->assertFileExists($salesOutputPath);
@@ -40,12 +39,9 @@ class ApplicationTest extends BaseTest
         foreach ([$salesManifest] as $manifest) {
             $this->assertArrayHasKey('destination', $manifest);
             $this->assertArrayHasKey('incremental', $manifest);
-            $this->assertTrue($manifest['incremental']);
-            $this->assertArrayHasKey('primary_key', $manifest);
-            $this->assertEquals('id', $manifest['primary_key'][0]);
+            $this->assertFalse($manifest['incremental']);
         }
 
-//        $this->assertEquals($this->config['parameters']['outputBucket'] . '.users.csv', $usersManifest['destination']);
-//        $this->assertEquals($this->config['parameters']['outputBucket'] . '.profiles.csv', $profilesManifest['destination']);
+        $this->assertEquals($this->config['parameters']['sheets'][0]['outputTable'], $salesManifest['destination']);
     }
 }

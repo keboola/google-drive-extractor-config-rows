@@ -59,6 +59,10 @@ class Extractor
         $status = [];
 
         foreach ($sheets as $sheet) {
+            if (!$sheet['enabled']) {
+                continue;
+            }
+
             $this->logger->info('Importing sheet ' . $sheet['sheetTitle']);
 
             try {

@@ -100,13 +100,9 @@ class Application
 
     private function runAction()
     {
-        $files = array_filter($this->container['parameters']['files'], function ($file) {
-            return $file['enabled'];
-        });
-
         /** @var Extractor $extractor */
         $extractor = $this->container['extractor'];
-        $extracted = $extractor->run($files);
+        $extracted = $extractor->run($this->container['parameters']['sheets']);
 
         return [
             'status' => 'ok',

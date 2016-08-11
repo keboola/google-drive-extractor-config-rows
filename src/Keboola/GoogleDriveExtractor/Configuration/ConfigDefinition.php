@@ -31,7 +31,7 @@ class ConfigDefinition implements ConfigurationInterface
                     ->isRequired()
                     ->cannotBeEmpty()
                 ->end()
-                ->arrayNode('files')
+                ->arrayNode('sheets')
                     ->isRequired()
                     ->prototype('array')
                         ->children()

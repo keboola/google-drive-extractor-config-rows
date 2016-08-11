@@ -29,6 +29,7 @@ class Output
 
         $dataProcessor = new Processor($tmpFilename, $sheet);
         $outFilename = $dataProcessor->process();
+
         $this->createManifest($outFilename, $sheet['outputTable']);
 
         unlink($tmpFilename);
@@ -41,7 +42,7 @@ class Output
             mkdir($outTablesDir, 0777, true);
         }
 
-        $fileName = $outTablesDir . '/' . $sheet['fileId'] . "_" . $sheet['sheetId'] . '-' . uniqid() . ".csv";
+        $fileName = $outTablesDir . '/' . $sheet['fileId'] . "_" . $sheet['sheetId'] . ".csv";
         $fh = fopen($fileName, 'w+');
         if (!$fh) {
             throw new \Exception("Can't write to file " . $fileName);
