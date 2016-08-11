@@ -1,5 +1,9 @@
 <?php
 
+use Keboola\GoogleDriveExtractor\Application;
+use Keboola\GoogleDriveExtractor\Exception\ApplicationException;
+use Keboola\GoogleDriveExtractor\Exception\UserException;
+use Keboola\GoogleDriveExtractor\Logger;
 use Symfony\Component\Yaml\Yaml;
 
 require_once(dirname(__FILE__) . "/bootstrap.php");
