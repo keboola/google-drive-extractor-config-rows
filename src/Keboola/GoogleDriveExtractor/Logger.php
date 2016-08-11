@@ -25,7 +25,7 @@ class Logger extends \Monolog\Logger
             // Set user debug mode
             $formatter = new LineFormatter("%level_name%: %message% %context% %extra%\n");
         } else {
-            // Simple message (TODO add user readable $context)
+            // Simple message
             $formatter = new LineFormatter("%message%\n");
         }
 

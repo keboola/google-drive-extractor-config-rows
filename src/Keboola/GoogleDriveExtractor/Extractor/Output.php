@@ -55,18 +55,14 @@ class Output
         return $fileName;
     }
 
-    public function createManifest($filename, $outputTable, $primaryKey = null, $incremental = false)
+    public function createManifest($filename, $outputTable)
     {
         $outFilename = $filename . '.manifest';
 
         $manifestData = [
             'destination' => $outputTable,
-            'incremental' => $incremental
+            'incremental' => false
         ];
-
-        if ($primaryKey !== null) {
-            $manifestData['primary_key'] = $primaryKey;
-        }
 
         return file_put_contents($outFilename, Yaml::dump($manifestData));
     }

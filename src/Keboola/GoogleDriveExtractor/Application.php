@@ -82,7 +82,10 @@ class Application
             }
             if ($e->getCode() == 403) {
                 if (strtolower($e->getResponse()->getReasonPhrase()) == 'forbidden') {
-                    $this->container['logger']->warning("You don't have access to Google Analytics resource. Probably you don't have access to profile, or profile doesn't exists anymore.");
+                    $this->container['logger']->warning(
+                        "You don't have access to Google Analytics resource.
+                        Probably you don't have access to profile, or profile doesn't exists anymore."
+                    );
                     return [];
                 } else {
                     throw new UserException("Reason: " . $e->getResponse()->getReasonPhrase(), $e);

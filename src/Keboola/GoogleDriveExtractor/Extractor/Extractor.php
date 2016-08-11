@@ -89,27 +89,31 @@ class Extractor
                 throw $e;
             }
 
-            if (isset($meta['exportLinks']['text/csv'])) {
-                $exportLink = $meta['exportLinks']['text/csv'] . '&gid=' . $sheet['sheetId'];
-            } else {
-                $exportLink = str_replace('pdf', 'csv', $meta['exportLinks']['application/pdf']) . '&gid=' . $sheet['sheetId'];
-            }
+            $exportLink = isset($meta['exportLinks']['text/csv'])
+                ?$meta['exportLinks']['text/csv'] . '&gid=' . $sheet['sheetId']
+                :str_replace('pdf', 'csv', $meta['exportLinks']['application/pdf']) . '&gid=' . $sheet['sheetId'];
 
             try {
                 $stream = $this->driveApi->export($exportLink);
-
-                if ($stream->getSize() > 0) {
-                    $this->output->save($stream, $sheet);
-                } else {
+                if ($stream->getSize() == 0) {
                     $this->logger->warning(sprintf(
                         "Sheet is empty. File: '%s', Sheet: '%s'.",
                         $sheet['fileTitle'],
                         $sheet['sheetTitle']
                     ));
                     $status[$sheet['sheetTitle']] = "file is empty";
+                    continue;
                 }
+                $this->output->save($stream, $sheet);
             } catch (RequestException $e) {
-                $userException = new UserException("Error importing file - sheet: '" . $sheet['fileTitle'] . " - " . $sheet['sheetTitle'] . "'. ", $e);
+                $userException = new UserException(
+                    sprintf(
+                        "Error importing file - sheet: '%s - %s'",
+                        $sheet['fileTitle'],
+                        $sheet['sheetTitle']
+                    ),
+                    $e
+                );
                 $userException->setData(array(
                     'message' => $e->getMessage(),
                     'reason'  => $e->getResponse()->getReasonPhrase(),
