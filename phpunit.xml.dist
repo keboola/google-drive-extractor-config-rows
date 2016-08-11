@@ -11,7 +11,7 @@
          bootstrap="bootstrap.php">
 
     <php>
-        <const name="ROOT_PATH" value="./"/>
+        <const name="ROOT_PATH" value="."/>
     </php>
 
     <testsuite name="Google Analytics Extractor Test Suite">
