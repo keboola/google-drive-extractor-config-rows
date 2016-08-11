@@ -5,6 +5,7 @@
  * Date: 10/08/16
  * Time: 16:45
  */
+namespace Keboola\GoogleDriveExtractor\Tests;
 
 use Keboola\GoogleDriveExtractor\Test\BaseTest;
 use Symfony\Component\Filesystem\Filesystem;

@@ -1,4 +1,7 @@
 <?php
+
+namespace Keboola\GoogleDriveExtractor\Tests;
+
 use Keboola\Google\ClientBundle\Google\RestApi;
 use Keboola\GoogleDriveExtractor\GoogleDrive\Client;
 use Keboola\GoogleDriveExtractor\Test\BaseTest;
@@ -49,5 +52,4 @@ class ClientTest extends BaseTest
         $this->assertInstanceOf('GuzzleHttp\Psr7\Stream', $content);
         $this->assertGreaterThan(0, $content->getSize());
     }
-
 }

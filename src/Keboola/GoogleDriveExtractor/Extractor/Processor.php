@@ -8,7 +8,6 @@
 
 namespace Keboola\GoogleDriveExtractor\Extractor;
 
-
 use Keboola\Csv\CsvFile;
 
 class Processor
@@ -64,7 +63,6 @@ class Processor
                 } else {
                     $csvTransposeHeader = $csvRow;
                 }
-
             } else {
                 if (isset($this->config['transform'])) {
                     // Transpose
@@ -173,7 +171,7 @@ class Processor
     {
         $string = str_replace('#', 'count', $string);
         $string = self::unaccent($string);
-        $string = preg_replace("/[\n\r]/","",$string);
+        $string = preg_replace("/[\n\r]/", "", $string);
         $string = preg_replace("/[^A-Za-z0-9_\s]/", '', $string);
         $string = trim($string);
         $string = str_replace(' ', '_', $string);

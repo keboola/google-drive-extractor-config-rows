@@ -20,7 +20,7 @@
 
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./src/Keboola/GoogleAnalyticsExtractor</directory>
+            <directory suffix=".php">./src/Keboola/GoogleDriveExtractor</directory>
         </whitelist>
     </filter>
 

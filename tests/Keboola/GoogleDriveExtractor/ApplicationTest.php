@@ -1,11 +1,12 @@
 <?php
-
 /**
  * Created by PhpStorm.
  * User: miroslavcillik
  * Date: 19/04/16
  * Time: 10:59
  */
+
+namespace Keboola\GoogleDriveExtractor\Tests;
 
 use Keboola\GoogleDriveExtractor\Application;
 use Keboola\GoogleDriveExtractor\Test\BaseTest;
