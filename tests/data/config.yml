@@ -1,0 +1,23 @@
+parameters:
+  outputBucket: "in.c-google-drive-extractor-testcfg1"
+  sheets:
+    -
+      id: 0
+      fileId: 1tep21r8fDJyXJyMAo2KKqBrxaEmqoJuwnQB4Y6gqGBU
+      fileTitle: "SK Sales rep monthly targets"
+      sheetId: 10
+      sheetTitle: "CM Targets"
+      outputTable: "in.c-google-drive-extractor-testcfg1.nieco-10"
+      enabled: true
+      header:
+        rows: 2
+        columns:
+          - "City Manager"
+          - "Team"
+        transpose:
+          row: 1
+          name: month
+      transform:
+        transpose:
+          from: 3
+

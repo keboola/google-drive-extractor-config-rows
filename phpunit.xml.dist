@@ -14,7 +14,7 @@
         <const name="ROOT_PATH" value="."/>
     </php>
 
-    <testsuite name="Google Analytics Extractor Test Suite">
+    <testsuite name="Google Drive Extractor Test Suite">
         <directory>tests</directory>
     </testsuite>
 

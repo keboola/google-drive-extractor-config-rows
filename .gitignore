@@ -1,8 +1,8 @@
-build/
-vendor/
-data/
+/build/
+/vendor/
+/data/
 .idea/
 composer.phar
 tests.sh
 tokens.php
-tests/data/out
+/tests/data/out
