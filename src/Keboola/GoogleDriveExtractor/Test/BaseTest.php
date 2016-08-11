@@ -16,10 +16,10 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->config = $this->getConfig();
+        $this->config = $this->makeConfig();
     }
 
-    private function getConfig()
+    private function makeConfig()
     {
         $config = Yaml::parse(file_get_contents(ROOT_PATH . '/tests/data/config.yml'));
         $config['parameters']['data_dir'] = ROOT_PATH . '/tests/data/';

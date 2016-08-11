@@ -6,8 +6,7 @@
  * Time: 16:45
  */
 
-namespace Keboola\GoogleDriveExtractor\Test;
-
+use Keboola\GoogleDriveExtractor\Test\BaseTest;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;

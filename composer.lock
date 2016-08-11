@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1d39620f46dfdaf74fb9e555422e56ae",
-    "content-hash": "cab0c232fa8357d0fddac0562a317e94",
+    "hash": "809e8a5fbe796a71b6e6bad4ee7e3495",
+    "content-hash": "a86cdec23261ec9b79a617a8df7b179a",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -252,6 +252,54 @@
                 "rest"
             ],
             "time": "2016-02-09 14:35:42"
+        },
+        {
+            "name": "keboola/php-encryption",
+            "version": "0.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/keboola/php-encryption.git",
+                "reference": "b3608ad1572dde0a1d8af0c25289eba7407b60ad"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/keboola/php-encryption/zipball/b3608ad1572dde0a1d8af0c25289eba7407b60ad",
+                "reference": "b3608ad1572dde0a1d8af0c25289eba7407b60ad",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mcrypt": "*",
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Keboola\\Encryption": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Martin Halamicek",
+                    "email": "martin@halamicek.cz"
+                }
+            ],
+            "description": "Mcrypt wrapper - AES encryption support",
+            "keywords": [
+                "aes",
+                "cipher",
+                "encryption",
+                "mcrypt",
+                "security"
+            ],
+            "abandoned": "defuse/php-encryption",
+            "time": "2013-07-15 12:02:24"
         },
         {
             "name": "keboola/php-temp",

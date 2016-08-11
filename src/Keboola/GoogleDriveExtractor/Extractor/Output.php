@@ -8,7 +8,7 @@
 
 namespace Keboola\GoogleDriveExtractor\Extractor;
 
-use Keboola\Csv\CsvFile;
+use Psr\Http\Message\StreamInterface;
 use Symfony\Component\Yaml\Yaml;
 
 class Output
@@ -23,74 +23,43 @@ class Output
         $this->outputBucket = $outputBucket;
     }
 
-    public function writeProfiles(CsvFile $csv, array $profiles)
+    public function save(StreamInterface $stream, array $sheet)
     {
-        $csv->writeRow(['id', 'name', 'webPropertyId', 'webPropertyName', 'accountId', 'accountName']);
-        foreach ($profiles as $profile) {
-            $csv->writeRow($profile);
-        }
+        $tmpFilename = $this->writeRawCsv($stream, $sheet);
 
-        return $csv;
+        $dataProcessor = new Processor($tmpFilename, $sheet);
+        $outFilename = $dataProcessor->process();
+        $this->createManifest($outFilename, $sheet['outputTable']);
+
+        unlink($tmpFilename);
     }
 
-    public function writeReport(CsvFile $csv, array $report, $profileId, $incremental = false)
-    {
-        $cnt = 0;
-        /** @var Result $result */
-        foreach ($report['data'] as $result) {
-            $metrics = $this->formatResultKeys($result->getMetrics());
-            $dimensions = $this->formatResultKeys($result->getDimensions());
-
-            // CSV Header
-            if ($cnt == 0 && !$incremental) {
-                $headerRow = array_merge(
-                    ['id', 'idProfile'],
-                    array_keys($dimensions),
-                    array_keys($metrics)
-                );
-                $csv->writeRow($headerRow);
-            }
-
-            if (isset($dimensions['date'])) {
-                $dimensions['date'] = date('Y-m-d', strtotime($dimensions['date']));
-            }
-
-            $row = array_merge(array_values($dimensions), array_values($metrics));
-            $outRow = array_merge(
-                [sha1($profileId . implode('', $dimensions)), $profileId],
-                $row
-            );
-            $csv->writeRow($outRow);
-            $cnt++;
-        }
-
-        return $csv;
-    }
-
-    private function formatResultKeys($metricsOrDimensions)
-    {
-        $res = [];
-        foreach ($metricsOrDimensions as $k => $v) {
-            $res[str_replace('ga:', '', $k)] = $v;
-        }
-        return $res;
-    }
-
-    public function createCsvFile($name)
+    protected function writeRawCsv(StreamInterface $stream, array $sheet)
     {
         $outTablesDir = $this->dataDir . '/out/tables';
         if (!is_dir($outTablesDir)) {
             mkdir($outTablesDir, 0777, true);
         }
-        return new CsvFile($this->dataDir . '/out/tables/' . $name . '.csv');
+
+        $fileName = $outTablesDir . '/' . $sheet['fileId'] . "_" . $sheet['sheetId'] . '-' . uniqid() . ".csv";
+        $fh = fopen($fileName, 'w+');
+        if (!$fh) {
+            throw new \Exception("Can't write to file " . $fileName);
+        }
+
+        /* @var StreamInterface $data */
+        fwrite($fh, $stream->getContents());
+        fclose($fh);
+
+        return $fileName;
     }
 
-    public function createManifest($name, $primaryKey = null, $incremental = false)
+    public function createManifest($filename, $outputTable, $primaryKey = null, $incremental = false)
     {
-        $outFilename = $this->dataDir . '/out/tables/' . $name . '.csv.manifest';
+        $outFilename = $filename . '.manifest';
 
         $manifestData = [
-            'destination' => sprintf('%s.%s.csv', $this->outputBucket, $name),
+            'destination' => $outputTable,
             'incremental' => $incremental
         ];
 

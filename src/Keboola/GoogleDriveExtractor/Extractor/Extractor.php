@@ -8,6 +8,9 @@
 
 namespace Keboola\GoogleDriveExtractor\Extractor;
 
+use GuzzleHttp\Exception\RequestException;
+use Keboola\GoogleDriveExtractor\Exception\ApplicationException;
+use Keboola\GoogleDriveExtractor\Exception\UserException;
 use Keboola\GoogleDriveExtractor\GoogleDrive\Client;
 use Monolog\Logger;
 use Psr\Http\Message\ResponseInterface;
@@ -15,7 +18,7 @@ use Psr\Http\Message\ResponseInterface;
 class Extractor
 {
     /** @var Client */
-    private $gaApi;
+    private $driveApi;
 
     /** @var Output */
     private $output;
@@ -23,15 +26,15 @@ class Extractor
     /** @var Logger */
     private $logger;
 
-    public function __construct(Client $gaApi, Output $output, Logger $logger)
+    public function __construct(Client $driveApi, Output $output, Logger $logger)
     {
-        $this->gaApi = $gaApi;
+        $this->driveApi = $driveApi;
         $this->logger = $logger;
         $this->output = $output;
 
-        $this->gaApi->getApi()->setBackoffsCount(7);
-        $this->gaApi->getApi()->setBackoffCallback403($this->getBackoffCallback403());
-        $this->gaApi->getApi()->setRefreshTokenCallback([$this, 'refreshTokenCallback']);
+        $this->driveApi->getApi()->setBackoffsCount(7);
+        $this->driveApi->getApi()->setBackoffCallback403($this->getBackoffCallback403());
+        $this->driveApi->getApi()->setRefreshTokenCallback([$this, 'refreshTokenCallback']);
     }
 
     public function getBackoffCallback403()
@@ -51,89 +54,69 @@ class Extractor
         };
     }
 
-    public function run(array $queries, array $profile)
+    public function run(array $sheets)
     {
         $status = [];
-        $this->extract($queries, $profile['id']);
-        $status[$profile['name']] = 'ok';
+
+        foreach ($sheets as $sheet) {
+            $this->logger->info('Importing sheet ' . $sheet['sheetTitle']);
+
+            try {
+                $meta = $this->driveApi->getFile($sheet['fileId']);
+            } catch (RequestException $e) {
+                if ($e->getResponse()->getStatusCode() == 404) {
+                    throw new UserException(sprintf("File '%s' not found in Google Drive", $sheet['sheetName']), $e);
+                } else {
+                    $userException = new UserException("Google Drive Error: " . $e->getMessage(), $e);
+                    $userException->setData(array(
+                        'message' => $e->getMessage(),
+                        'reason'  => $e->getResponse()->getReasonPhrase(),
+                        'sheet'   => $sheet
+                    ));
+                    throw $userException;
+                }
+            }
+
+            if (!isset($meta['exportLinks'])) {
+                $e = new ApplicationException("ExportLinks missing in file resource");
+                $e->setData([
+                    'fileMetadata' => $meta
+                ]);
+                throw $e;
+            }
+
+            if (isset($meta['exportLinks']['text/csv'])) {
+                $exportLink = $meta['exportLinks']['text/csv'] . '&gid=' . $sheet['sheetId'];
+            } else {
+                $exportLink = str_replace('pdf', 'csv', $meta['exportLinks']['application/pdf']) . '&gid=' . $sheet['sheetId'];
+            }
+
+            try {
+                $stream = $this->driveApi->export($exportLink);
+
+                if ($stream->getSize() > 0) {
+                    $this->output->save($stream, $sheet);
+                } else {
+                    $this->logger->warning(sprintf(
+                        "Sheet is empty. File: '%s', Sheet: '%s'.",
+                        $sheet['fileTitle'],
+                        $sheet['sheetTitle']
+                    ));
+                    $status[$sheet['sheetTitle']] = "file is empty";
+                }
+            } catch (RequestException $e) {
+                $userException = new UserException("Error importing file - sheet: '" . $sheet['fileTitle'] . " - " . $sheet['sheetTitle'] . "'. ", $e);
+                $userException->setData(array(
+                    'message' => $e->getMessage(),
+                    'reason'  => $e->getResponse()->getReasonPhrase(),
+                    'body'    => substr($e->getResponse()->getBody(), 0, 300),
+                    'sheet'   => $sheet
+                ));
+                throw $userException;
+            }
+        }
 
         return $status;
-    }
-
-    private function extract($queries, $profileId)
-    {
-        foreach ($queries as $query) {
-            if (empty($query['query']['viewId'])) {
-                $query['query']['viewId'] = (string)$profileId;
-            } elseif ($query['query']['viewId'] != $profileId) {
-                continue;
-            }
-
-            $this->logger->debug("Extracting ...", [
-                'query' => $query
-            ]);
-
-            $report = $this->getReport($query);
-            if ($report == null) {
-                continue;
-            }
-
-            $csvFile = $this->createOutputFile(
-                $query['outputTable']
-            );
-            $this->output->writeReport($csvFile, $report, $profileId);
-
-            // pagination
-            do {
-                $nextQuery = null;
-                if (isset($report['nextPageToken'])) {
-                    $query['query']['pageToken'] = $report['nextPageToken'];
-                    $nextQuery = $query;
-                    $report = $this->getReport($nextQuery);
-                    $this->output->writeReport($csvFile, $report, $profileId);
-                }
-                $query = $nextQuery;
-            } while ($nextQuery);
-        }
-    }
-
-    private function getReport($query)
-    {
-        return $this->gaApi->getBatch($query);
-    }
-
-    private function createOutputFile($filename, $primaryKey = ['id'], $incremental = true)
-    {
-        $this->output->createManifest($filename, $primaryKey, $incremental);
-        return $this->output->createCsvFile($filename);
-    }
-
-    public function getSampleReport($query)
-    {
-        $report = $this->getReport($query);
-        $report['data'] = array_slice($report['data'], 0, 20);
-
-        $csvFile = $this->createOutputFile(
-            $query['outputTable']
-        );
-        $this->output->writeReport($csvFile, $report, $query['query']['viewId']);
-
-        return [
-            'status' => 'success',
-            'viewId' => $query['query']['viewId'],
-            'data' => file_get_contents($csvFile),
-            'rowCount' => isset($report['rowCount'])?$report['rowCount']:0
-        ];
-    }
-
-    public function getSegments()
-    {
-        $segments = $this->gaApi->getSegments();
-
-        return [
-            'status' => 'success',
-            'data' => $segments,
-        ];
     }
 
     public function refreshTokenCallback($accessToken, $refreshToken)

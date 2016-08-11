@@ -11,6 +11,12 @@ namespace Keboola\GoogleDriveExtractor;
 
 use GuzzleHttp\Exception\RequestException;
 use Keboola\Google\ClientBundle\Google\RestApi;
+use Keboola\GoogleDriveExtractor\Configuration\ConfigDefinition;
+use Keboola\GoogleDriveExtractor\Exception\ApplicationException;
+use Keboola\GoogleDriveExtractor\Exception\UserException;
+use Keboola\GoogleDriveExtractor\Extractor\Extractor;
+use Keboola\GoogleDriveExtractor\Extractor\Output;
+use Keboola\GoogleDriveExtractor\GoogleDrive\Client;
 use Monolog\Handler\NullHandler;
 use Pimple\Container;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
@@ -52,7 +58,7 @@ class Application
         };
         $container['extractor'] = function ($c) {
             return new Extractor(
-                $c['google_analytics_client'],
+                $c['google_drive_client'],
                 $c['output'],
                 $c['logger']
             );
@@ -94,49 +100,18 @@ class Application
 
     private function runAction()
     {
-        $extracted = [];
-        $profiles = $this->container['parameters']['profiles'];
-        $queries = array_filter($this->container['parameters']['queries'], function ($query) {
-            return $query['enabled'];
+        $files = array_filter($this->container['parameters']['files'], function ($file) {
+            return $file['enabled'];
         });
-
-        /** @var Output $output */
-        $output = $this->container['output'];
-        $csv = $output->createCsvFile('profiles');
-        $output->createManifest('profiles', ['id'], true);
-        $output->writeProfiles($csv, $profiles);
 
         /** @var Extractor $extractor */
         $extractor = $this->container['extractor'];
-        foreach ($profiles as $profile) {
-            $extracted[] = $extractor->run($queries, $profile);
-        }
+        $extracted = $extractor->run($files);
 
         return [
             'status' => 'ok',
             'extracted' => $extracted
         ];
-    }
-
-    private function sampleAction()
-    {
-        $profile = $this->container['parameters']['profiles'][0];
-        $query = $this->container['parameters']['queries'][0];
-
-        if (empty($query['query']['viewId'])) {
-            $query['query']['viewId'] = $profile['id'];
-        }
-
-        /** @var Extractor $extractor */
-        $extractor = $this->container['extractor'];
-        return $extractor->getSampleReport($query);
-    }
-
-    private function segmentsAction()
-    {
-        /** @var Extractor $extractor */
-        $extractor = $this->container['extractor'];
-        return $extractor->getSegments();
     }
 
     private function validateParamteters($parameters)
