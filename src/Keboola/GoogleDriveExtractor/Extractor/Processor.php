@@ -170,7 +170,7 @@ class Processor
     protected function sanitize($string)
     {
         $string = str_replace('#', 'count', $string);
-        $string = self::unaccent($string);
+        $string = $this->unaccent($string);
         $string = preg_replace("/[\n\r]/", "", $string);
         $string = preg_replace("/[^A-Za-z0-9_\s]/", '', $string);
         $string = trim($string);
@@ -189,13 +189,13 @@ class Processor
      * @param  string $string  String to unaccent
      * @return string $string  Unaccented string
      */
-    public static function unaccent($string)
+    private function unaccent($string)
     {
         if (!preg_match('/[\x80-\xff]/', $string)) {
             return $string;
         }
 
-        if (self::seemsUtf8($string)) {
+        if ($this->seemsUtf8($string)) {
             $chars = array(
                 // Decompositions for Latin-1 Supplement
                 chr(195).chr(128) => 'A', chr(195).chr(129) => 'A',
@@ -334,7 +334,7 @@ class Processor
      * @param  string $string
      * @return boolean $bool
      */
-    public static function seemsUtf8($string)
+    private function seemsUtf8($string)
     {
         for ($i = 0; $i < strlen($string); $i++) {
             if (ord($string[$i]) < 0x80) {
