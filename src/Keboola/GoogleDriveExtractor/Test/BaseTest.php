@@ -17,7 +17,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     /** @var Client */
     private $googleDriveApi;
 
-    protected $testFilePath = ROOT_PATH . '/tests/data/expected/titanic.csv';
+    protected $testFilePath = ROOT_PATH . '/tests/data/in/titanic.csv';
 
     protected $testFileName = 'titanic';
 
