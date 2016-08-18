@@ -29,20 +29,26 @@ class ApplicationTest extends BaseTest
     {
         $this->application->run();
 
-        $salesOutputPath = ROOT_PATH . '/tests/data/out/tables/1tep21r8fDJyXJyMAo2KKqBrxaEmqoJuwnQB4Y6gqGBU_10_out.csv';
-        $salesManifestPath = $salesOutputPath . '.manifest';
+        $outputPath = sprintf(
+            '%s/tests/data/out/tables/%s_%s_out.csv',
+            ROOT_PATH,
+            $this->testFile['spreadsheetId'],
+            $this->testFile['sheets'][0]['properties']['sheetId']
+        );
 
-        $this->assertFileExists($salesOutputPath);
-        $this->assertFileExists($salesManifestPath);
+        $manifestPath = $outputPath . '.manifest';
+        $manifest = Yaml::parse(file_get_contents($manifestPath));
 
-        $salesManifest = Yaml::parse(file_get_contents($salesManifestPath));
+        $this->assertArrayHasKey('destination', $manifest);
+        $this->assertArrayHasKey('incremental', $manifest);
+        $this->assertFalse($manifest['incremental']);
 
-        foreach ([$salesManifest] as $manifest) {
-            $this->assertArrayHasKey('destination', $manifest);
-            $this->assertArrayHasKey('incremental', $manifest);
-            $this->assertFalse($manifest['incremental']);
-        }
+        $outputTableId = sprintf(
+            '%s.%s',
+            $this->config['parameters']['outputBucket'],
+            $this->config['parameters']['sheets'][0]['outputTable']
+        );
 
-        $this->assertEquals($this->config['parameters']['sheets'][0]['outputTable'], $salesManifest['destination']);
+        $this->assertEquals($outputTableId, $manifest['destination']);
     }
 }

@@ -66,7 +66,7 @@ class Extractor
             $this->logger->info('Importing sheet ' . $sheet['sheetTitle']);
 
             try {
-                $meta = $this->driveApi->getFile($sheet['fileId']);
+                $spreadsheet = $this->driveApi->getSpreadsheet($sheet['fileId']);
             } catch (RequestException $e) {
                 if ($e->getResponse()->getStatusCode() == 404) {
                     throw new UserException(sprintf("File '%s' not found in Google Drive", $sheet['sheetName']), $e);
@@ -81,30 +81,8 @@ class Extractor
                 }
             }
 
-            if (!isset($meta['exportLinks'])) {
-                $e = new ApplicationException("ExportLinks missing in file resource");
-                $e->setData([
-                    'fileMetadata' => $meta
-                ]);
-                throw $e;
-            }
-
-            $exportLink = isset($meta['exportLinks']['text/csv'])
-                ?$meta['exportLinks']['text/csv'] . '&gid=' . $sheet['sheetId']
-                :str_replace('pdf', 'csv', $meta['exportLinks']['application/pdf']) . '&gid=' . $sheet['sheetId'];
-
             try {
-                $stream = $this->driveApi->export($exportLink);
-                if ($stream->getSize() == 0) {
-                    $this->logger->warning(sprintf(
-                        "Sheet is empty. File: '%s', Sheet: '%s'.",
-                        $sheet['fileTitle'],
-                        $sheet['sheetTitle']
-                    ));
-                    $status[$sheet['sheetTitle']] = "file is empty";
-                    continue;
-                }
-                $this->output->save($stream, $sheet);
+                $rawCsv = $this->export($spreadsheet, $sheet);
             } catch (RequestException $e) {
                 $userException = new UserException(
                     sprintf(
@@ -122,9 +100,91 @@ class Extractor
                 ));
                 throw $userException;
             }
+
+            $outputCsv = $this->output->process($rawCsv, $sheet);
+            $this->output->createManifest($outputCsv->getPathname(), $sheet['outputTable']);
+
+            $status[$sheet['fileTitle']][$sheet['sheetTitle']] = 'success';
         }
 
         return $status;
+    }
+
+    private function export($spreadsheet, $sheetCfg)
+    {
+        $csv = $this->output->createCsv($sheetCfg);
+        $sheet = $this->getSheetById($spreadsheet['sheets'], $sheetCfg['sheetId']);
+
+        $rowCount = $sheet['properties']['gridProperties']['rowCount'];
+        $columnCount = $sheet['properties']['gridProperties']['columnCount'];
+        $offset = 1;
+        $limit = 1000;
+
+        while ($offset <= $rowCount) {
+            $range = $this->getRange($sheet['properties']['title'], $columnCount, $offset, $limit);
+
+            $response = $this->driveApi->getSpreadsheetValues(
+                $spreadsheet['spreadsheetId'],
+                $range
+            );
+
+            if (count($response['values']) == 0) {
+                $this->logger->warning(sprintf(
+                    "Sheet is empty. File: '%s', Sheet: '%s'.",
+                    $sheet['fileTitle'],
+                    $sheet['sheetTitle']
+                ));
+                continue;
+            }
+
+            $this->output->write($csv, $response['values']);
+
+            $offset += $limit;
+        }
+
+        return $csv;
+    }
+
+    /**
+     * @param $sheets
+     * @param $id
+     * @return array|bool
+     */
+    private function getSheetById($sheets, $id)
+    {
+        foreach ($sheets as $sheet) {
+            if ($sheet['properties']['sheetId'] == $id) {
+                return $sheet;
+            }
+        }
+
+        return false;
+    }
+
+    private function getRange($sheetTitle, $columnCount, $rowOffset = 1, $rowLimit = 1000)
+    {
+        $lastColumn = $this->getColumnA1($columnCount - 1);
+
+        $start = 'A' . $rowOffset;
+        $end = $lastColumn . ($rowOffset + $rowLimit - 1);
+
+        return $sheetTitle . '!' . $start . ':' . $end;
+    }
+
+    private function getColumnA1($columnNumber)
+    {
+        $alphas = range('A', 'Z');
+
+        $prefix = '';
+        if ($columnNumber > 26) {
+            $quotient = intval(floor($columnNumber/26));
+            $prefix = $alphas[$quotient];
+        }
+
+        $remainder = $columnNumber%26;
+
+        return $prefix . $alphas[$remainder];
+
     }
 
     public function refreshTokenCallback($accessToken, $refreshToken)

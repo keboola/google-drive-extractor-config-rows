@@ -22,17 +22,17 @@ class Processor
 
     protected $outputFile;
 
-    public function __construct($inputFile, $config)
+    public function __construct(CsvFile $inputCsv, $config)
     {
         $this->config = $config;
-        $this->inputCsv = new CsvFile($inputFile);
-        $this->outputFile = substr($inputFile, 0, (count($inputFile) - 5)) . '_out.csv';
+        $this->inputCsv = $inputCsv;
+        $this->outputFile = substr($inputCsv->getPathname(), 0, (count($inputCsv->getPathname()) - 5)) . '_out.csv';
         $this->outputCsv = new CsvFile($this->outputFile);
     }
 
     /**
      * Process file using config settings
-     * @return string Output file name
+     * @return CsvFile
      */
     public function process()
     {
@@ -83,7 +83,7 @@ class Processor
             $i++;
         }
 
-        return $this->outputFile;
+        return $this->outputCsv;
     }
 
     protected function transpose($csvRow, $csvHeaderRaw, $csvTransposeHeader)

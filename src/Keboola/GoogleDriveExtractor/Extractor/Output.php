@@ -8,7 +8,7 @@
 
 namespace Keboola\GoogleDriveExtractor\Extractor;
 
-use Psr\Http\Message\StreamInterface;
+use Keboola\Csv\CsvFile;
 use Symfony\Component\Yaml\Yaml;
 
 class Output
@@ -23,36 +23,37 @@ class Output
         $this->outputBucket = $outputBucket;
     }
 
-    public function save(StreamInterface $stream, array $sheet)
-    {
-        $tmpFilename = $this->writeRawCsv($stream, $sheet);
-
-        $dataProcessor = new Processor($tmpFilename, $sheet);
-        $outFilename = $dataProcessor->process();
-
-        $this->createManifest($outFilename, $sheet['outputTable']);
-
-        unlink($tmpFilename);
-    }
-
-    protected function writeRawCsv(StreamInterface $stream, array $sheet)
+    /**
+     * @param $sheet
+     * @return CsvFile
+     */
+    public function createCsv($sheet)
     {
         $outTablesDir = $this->dataDir . '/out/tables';
         if (!is_dir($outTablesDir)) {
             mkdir($outTablesDir, 0777, true);
         }
+        $filename = $outTablesDir . '/' . $sheet['fileId'] . "_" . $sheet['sheetId'] . ".csv";
 
-        $fileName = $outTablesDir . '/' . $sheet['fileId'] . "_" . $sheet['sheetId'] . ".csv";
-        $fh = fopen($fileName, 'w+');
-        if (!$fh) {
-            throw new \Exception("Can't write to file " . $fileName);
+        return new CsvFile($filename);
+    }
+
+    public function write(CsvFile $csv, $data)
+    {
+        foreach ($data as $row) {
+            $csv->writeRow($row);
         }
+    }
 
-        /* @var StreamInterface $data */
-        fwrite($fh, $stream->getContents());
-        fclose($fh);
-
-        return $fileName;
+    /**
+     * @param CsvFile $csv
+     * @param $sheet
+     * @return CsvFile
+     */
+    public function process(CsvFile $csv, $sheet)
+    {
+        $processor = new Processor($csv, $sheet);
+        return $processor->process();
     }
 
     public function createManifest($filename, $outputTable)
@@ -60,7 +61,7 @@ class Output
         $outFilename = $filename . '.manifest';
 
         $manifestData = [
-            'destination' => $outputTable,
+            'destination' => $this->outputBucket . '.' . $outputTable,
             'incremental' => false
         ];
 

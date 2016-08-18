@@ -19,6 +19,7 @@ class ClientTest extends BaseTest
 
     public function setUp()
     {
+        parent::setUp();
         $api = new RestApi(getenv('CLIENT_ID'), getenv('CLIENT_SECRET'));
         $api->setCredentials(getenv('ACCESS_TOKEN'), getenv('REFRESH_TOKEN'));
         $this->client = new Client($api);
@@ -26,30 +27,37 @@ class ClientTest extends BaseTest
 
     public function testGetFile()
     {
-        $fileId = getenv('FILE_ID');
-        $file = $this->client->getFile($fileId);
+        $file = $this->client->getFile($this->testFile['spreadsheetId']);
 
         $this->assertArrayHasKey('id', $file);
-        $this->assertArrayHasKey('title', $file);
-        $this->assertArrayHasKey('exportLinks', $file);
-        $this->assertEquals($fileId, $file['id']);
+        $this->assertArrayHasKey('name', $file);
+        $this->assertEquals($this->testFile['spreadsheetId'], $file['id']);
     }
 
-    public function testExport()
+    public function testGetSpreadsheet()
     {
-        $fileId = getenv('FILE_ID');
-        $sheetId = getenv('SHEET_ID');
-        $meta = $this->client->getFile($fileId);
+        $spreadsheet = $this->client->getSpreadsheet($this->testFile['spreadsheetId']);
 
-        if (isset($meta['exportLinks']['text/csv'])) {
-            $exportLink = $meta['exportLinks']['text/csv'] . '&gid=' . $sheetId;
-        } else {
-            $exportLink = str_replace('pdf', 'csv', $meta['exportLinks']['application/pdf']) . '&gid=' . $sheetId;
-        }
+        $this->assertArrayHasKey('spreadsheetId', $spreadsheet);
+        $this->assertArrayHasKey('properties', $spreadsheet);
+        $this->assertArrayHasKey('sheets', $spreadsheet);
+    }
 
-        $content = $this->client->export($exportLink);
+    public function testGetSpreadsheetValues()
+    {
+        $spreadsheetId = $this->testFile['spreadsheetId'];
+        $sheetTitle = $this->testFile['sheets'][0]['properties']['title'];
 
-        $this->assertInstanceOf('GuzzleHttp\Psr7\Stream', $content);
-        $this->assertGreaterThan(0, $content->getSize());
+        $response = $this->client->getSpreadsheetValues($spreadsheetId, $sheetTitle);
+
+        $this->assertArrayHasKey('range', $response);
+        $this->assertArrayHasKey('majorDimension', $response);
+        $this->assertArrayHasKey('values', $response);
+        $header = $response['values'][0];
+        $this->assertEquals('Class', $header[1]);
+        $this->assertEquals('Sex', $header[2]);
+        $this->assertEquals('Age', $header[3]);
+        $this->assertEquals('Survived', $header[4]);
+        $this->assertEquals('Freq', $header[5]);
     }
 }
