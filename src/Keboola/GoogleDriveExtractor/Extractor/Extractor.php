@@ -82,7 +82,7 @@ class Extractor
             }
 
             try {
-                $rawCsv = $this->export($spreadsheet, $sheet);
+                $this->export($spreadsheet, $sheet);
             } catch (RequestException $e) {
                 $userException = new UserException(
                     sprintf(
@@ -101,7 +101,7 @@ class Extractor
                 throw $userException;
             }
 
-            $outputCsv = $this->output->process($rawCsv, $sheet);
+            $outputCsv = $this->output->process($sheet);
             $this->output->createManifest($outputCsv->getPathname(), $sheet['outputTable']);
 
             $status[$sheet['fileTitle']][$sheet['sheetTitle']] = 'success';
@@ -137,7 +137,7 @@ class Extractor
                 continue;
             }
 
-            $this->output->write($csv, $response['values']);
+            $this->output->write($response['values']);
 
             $offset += $limit;
         }

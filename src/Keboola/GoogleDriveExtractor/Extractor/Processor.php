@@ -40,6 +40,7 @@ class Processor
         $csvTransposeHeader = null;
         $csvHeaderRaw = array();
 
+        $this->inputCsv->rewind();
         foreach ($this->inputCsv as $csvRow) {
             if ($i < $this->config['header']['rows']) {
                 if ($i == $this->config['header']['rows'] - 1) {

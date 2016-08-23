@@ -17,6 +17,11 @@ class Output
 
     private $outputBucket;
 
+    /** @var CsvFile */
+    private $csv;
+
+    private $header;
+
     public function __construct($dataDir, $outputBucket)
     {
         $this->dataDir = $dataDir;
@@ -33,26 +38,34 @@ class Output
         if (!is_dir($outTablesDir)) {
             mkdir($outTablesDir, 0777, true);
         }
-        $filename = $outTablesDir . '/' . $sheet['fileId'] . "_" . $sheet['sheetId'] . ".csv";
+        $filename = ROOT_PATH . '/' . $outTablesDir . '/' . $sheet['fileId'] . "_" . $sheet['sheetId'] . ".csv";
 
-        return new CsvFile($filename);
+        $this->csv = new CsvFile($filename);
+        $this->header = null;
+
+        return $this->csv;
     }
 
-    public function write(CsvFile $csv, $data)
+    public function write($data)
     {
+        if ($this->header == null) {
+            $this->header = $data[0];
+        }
+
+        $numCols = count($this->header);
+
         foreach ($data as $row) {
-            $csv->writeRow(array_pad($row, count($data[0]), ""));
+            $this->csv->writeRow(array_pad($row, $numCols, ""));
         }
     }
 
     /**
-     * @param CsvFile $csv
      * @param $sheet
      * @return CsvFile
      */
-    public function process(CsvFile $csv, $sheet)
+    public function process($sheet)
     {
-        $processor = new Processor($csv, $sheet);
+        $processor = new Processor($this->csv, $sheet);
         return $processor->process();
     }
 
