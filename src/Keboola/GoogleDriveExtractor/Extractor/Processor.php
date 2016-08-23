@@ -46,13 +46,13 @@ class Processor
                     $csvHeaderRaw = $csvRow;
                     $csvOutHeaderArr = $csvHeaderRaw;
 
-                    if (isset($this->config['header']['columns'])) {
+                    if (!empty($this->config['header']['columns'])) {
                         $csvOutHeaderArr = $this->config['header']['columns'];
                     }
-                    if (isset($this->config['transform']['transpose'])) {
+                    if (!empty($this->config['transform']['transpose'])) {
                         $csvOutHeaderArr = $this->transposeHeader($csvOutHeaderArr);
                     }
-                    if (isset($this->config['transform']['merge'])) {
+                    if (!empty($this->config['transform']['merge'])) {
                         $csvOutHeaderArr = $this->mergeHeader($csvOutHeaderArr);
                     }
                     if (!isset($this->config['header']['sanitize']) || $this->config['header']['sanitize'] != 0) {
@@ -63,21 +63,22 @@ class Processor
                 } else {
                     $csvTransposeHeader = $csvRow;
                 }
-            } else {
-                if (isset($this->config['transform'])) {
-                    // Transpose
-                    if (isset($this->config['transform']['transpose'])) {
-                        $this->transpose($csvRow, $csvHeaderRaw, $csvTransposeHeader);
-                    }
-                    // Merge
-                    if (isset($this->config['transform']['merge'])) {
-                        $csvRow = $this->merge($csvRow);
-                    }
-                }
 
-                if (!isset($this->config['transform']['transpose'])) {
-                    $this->outputCsv->writeRow($csvRow);
+                $i++;
+                continue;
+            }
+
+            if (isset($this->config['transform'])) {
+                if (isset($this->config['transform']['transpose'])) {
+                    $this->transpose($csvRow, $csvHeaderRaw, $csvTransposeHeader);
                 }
+                if (isset($this->config['transform']['merge'])) {
+                    $csvRow = $this->merge($csvRow);
+                }
+            }
+
+            if (!isset($this->config['transform']['transpose'])) {
+                $this->outputCsv->writeRow($csvRow);
             }
 
             $i++;
