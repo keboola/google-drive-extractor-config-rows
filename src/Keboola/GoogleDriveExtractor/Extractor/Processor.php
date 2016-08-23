@@ -83,6 +83,8 @@ class Processor
             $i++;
         }
 
+        unlink($this->inputCsv->getPathname());
+
         return $this->outputCsv;
     }
 
