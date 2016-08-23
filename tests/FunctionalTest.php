@@ -36,7 +36,7 @@ class FunctionalTest extends BaseTest
 
         $process = new Process(sprintf('php run.php --data=%s', $dataPath));
         $process->run();
-
+        
         return $process;
     }
 }

@@ -38,9 +38,8 @@ class Output
         if (!is_dir($outTablesDir)) {
             mkdir($outTablesDir, 0777, true);
         }
-        $filename = ROOT_PATH . '/' . $outTablesDir . '/' . $sheet['fileId'] . "_" . $sheet['sheetId'] . ".csv";
 
-        $this->csv = new CsvFile($filename);
+        $this->csv = new CsvFile($outTablesDir . '/' . $sheet['fileId'] . "_" . $sheet['sheetId'] . ".csv");
         $this->header = null;
 
         return $this->csv;
