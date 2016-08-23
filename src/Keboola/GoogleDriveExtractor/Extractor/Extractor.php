@@ -184,7 +184,6 @@ class Extractor
         $remainder = $columnNumber%26;
 
         return $prefix . $alphas[$remainder];
-
     }
 
     public function refreshTokenCallback($accessToken, $refreshToken)

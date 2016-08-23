@@ -41,7 +41,7 @@ class Output
     public function write(CsvFile $csv, $data)
     {
         foreach ($data as $row) {
-            $csv->writeRow($row);
+            $csv->writeRow(array_pad($row, count($data[0]), ""));
         }
     }
 
