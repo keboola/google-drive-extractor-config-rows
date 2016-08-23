@@ -62,8 +62,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
             'sheetId' => $testFile['sheets'][0]['properties']['sheetId'],
             'sheetTitle' => $testFile['sheets'][0]['properties']['title'],
             'outputTable' => $this->testFileName,
-            'enabled' => true,
-            'header' => ['rows' => 1]
+            'enabled' => true
         ];
 
         return $config;
