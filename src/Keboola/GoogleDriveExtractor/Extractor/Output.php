@@ -23,6 +23,8 @@ class Output
 
     private $header;
 
+    private $sheetCfg;
+
     public function __construct($dataDir, $outputBucket)
     {
         $this->dataDir = $dataDir;
@@ -42,6 +44,7 @@ class Output
 
         $this->csv = new CsvFile($outTablesDir . '/' . $sheet['fileId'] . "_" . $sheet['sheetId'] . ".csv");
         $this->header = null;
+        $this->sheetCfg = $sheet;
 
         return $this->csv;
     }
@@ -49,7 +52,8 @@ class Output
     public function write($data)
     {
         if ($this->header == null) {
-            $this->header = $data[0];
+            $headerRowNum = $this->sheetCfg['header']['rows'] - 1;
+            $this->header = $data[$headerRowNum];
         }
 
         $headerLength = count($this->header);
