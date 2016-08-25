@@ -9,6 +9,7 @@
 namespace Keboola\GoogleDriveExtractor\Extractor;
 
 use Keboola\Csv\CsvFile;
+use Keboola\GoogleDriveExtractor\Exception\UserException;
 use Symfony\Component\Yaml\Yaml;
 
 class Output
@@ -51,10 +52,19 @@ class Output
             $this->header = $data[0];
         }
 
-        $numCols = count($this->header);
+        $headerLength = count($this->header);
 
-        foreach ($data as $row) {
-            $this->csv->writeRow(array_pad($row, $numCols, ""));
+        foreach ($data as $k => $row) {
+            $rowLength = count($row);
+            if ($rowLength > $headerLength) {
+                throw new UserException(sprintf(
+                    "Row %s has more columns (%s) then header (%s).",
+                    $k,
+                    $rowLength,
+                    $headerLength
+                ));
+            }
+            $this->csv->writeRow(array_pad($row, $headerLength, ""));
         }
     }
 
