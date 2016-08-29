@@ -128,9 +128,9 @@ class Extractor
                 $range
             );
 
-            if (count($response['values']) == 0) {
+            if (empty($response['values'])) {
                 $this->logger->warning(sprintf(
-                    "Sheet is empty. File: '%s', Sheet: '%s'.",
+                    "Response is empty. File: '%s', Sheet: '%s'.",
                     $sheet['fileTitle'],
                     $sheet['sheetTitle']
                 ));
