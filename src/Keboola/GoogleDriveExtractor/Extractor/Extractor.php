@@ -133,7 +133,7 @@ class Extractor
                     "Response is empty. File: '%s', Sheet: '%s'.",
                     $sheet['fileTitle'],
                     $sheet['sheetTitle']
-                ));
+                ), ['response' => $response]);
                 continue;
             }
 
