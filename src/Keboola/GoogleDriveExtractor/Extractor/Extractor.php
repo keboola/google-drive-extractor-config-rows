@@ -131,8 +131,8 @@ class Extractor
             if (empty($response['values'])) {
                 $this->logger->warning(sprintf(
                     "Response is empty. File: '%s', Sheet: '%s'.",
-                    $sheet['fileTitle'],
-                    $sheet['sheetTitle']
+                    $sheetCfg['fileTitle'],
+                    $sheetCfg['sheetTitle']
                 ), ['response' => $response]);
                 continue;
             }
