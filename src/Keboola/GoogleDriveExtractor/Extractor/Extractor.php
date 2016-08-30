@@ -137,7 +137,7 @@ class Extractor
                 "Response is empty. File: '%s', Range: '%s'.",
                 $sheetCfg['fileTitle'],
                 $range
-            ), ['response' => $response]);
+            ));
 
             $offset += $limit;
         }
