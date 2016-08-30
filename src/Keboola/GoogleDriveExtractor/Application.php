@@ -120,7 +120,7 @@ class Application
                 [$parameters]
             );
         } catch (InvalidConfigurationException $e) {
-            throw new UserException($e->getMessage(), 0, $e);
+            throw new UserException($e->getMessage(), 400, $e);
         }
     }
 }
