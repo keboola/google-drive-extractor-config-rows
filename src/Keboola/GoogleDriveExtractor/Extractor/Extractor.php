@@ -129,16 +129,15 @@ class Extractor
                 $range
             );
 
-            if (empty($response['values'])) {
-                $this->logger->warning(sprintf(
-                    "Response is empty. File: '%s', Sheet: '%s'.",
-                    $sheetCfg['fileTitle'],
-                    $sheetCfg['sheetTitle']
-                ), ['response' => $response]);
-                continue;
+            if (!empty($response['values'])) {
+                $this->output->write($response['values']);
             }
 
-            $this->output->write($response['values']);
+            $this->logger->warning(sprintf(
+                "Response is empty. File: '%s', Range: '%s'.",
+                $sheetCfg['fileTitle'],
+                $range
+            ), ['response' => $response]);
 
             $offset += $limit;
         }
