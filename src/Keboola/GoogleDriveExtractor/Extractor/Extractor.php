@@ -129,17 +129,18 @@ class Extractor
                 $range
             );
 
-            if (!empty($response['values'])) {
-                $this->output->write($response['values']);
+            $offset += $limit;
+
+            if (empty($response['values'])) {
+                $this->logger->warning(sprintf(
+                    "Response is empty. File: '%s', Range: '%s'.",
+                    $sheetCfg['fileTitle'],
+                    $range
+                ));
+                continue;
             }
 
-            $this->logger->warning(sprintf(
-                "Response is empty. File: '%s', Range: '%s'.",
-                $sheetCfg['fileTitle'],
-                $range
-            ));
-
-            $offset += $limit;
+            $this->output->write($response['values']);
         }
 
         return $csv;
