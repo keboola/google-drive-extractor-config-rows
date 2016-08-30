@@ -9,3 +9,5 @@ parameters:
       sheetTitle:
       outputTable:
       enabled: true
+      header:
+        rows: 1

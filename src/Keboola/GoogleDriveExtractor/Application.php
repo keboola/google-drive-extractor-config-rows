@@ -78,26 +78,22 @@ class Application
             return $this->$actionMethod();
         } catch (RequestException $e) {
             if ($e->getCode() == 401) {
-                throw new UserException("Expired or wrong credentials, please reauthorize.", $e);
+                throw new UserException("Expired or wrong credentials, please reauthorize.", $e->getCode(), $e);
             }
             if ($e->getCode() == 403) {
                 if (strtolower($e->getResponse()->getReasonPhrase()) == 'forbidden') {
-                    $this->container['logger']->warning(
-                        "You don't have access to Google Drive resource.
-                        Probably you don't have access to profile, or profile doesn't exists anymore."
-                    );
+                    $this->container['logger']->warning("You don't have access to Google Drive resource.");
                     return [];
-                } else {
-                    throw new UserException("Reason: " . $e->getResponse()->getReasonPhrase(), $e);
                 }
+                throw new UserException("Reason: " . $e->getResponse()->getReasonPhrase(), $e->getCode(), $e);
             }
             if ($e->getCode() == 400) {
                 throw new UserException($e->getMessage());
             }
             if ($e->getCode() == 503) {
-                throw new UserException("Google API error: " . $e->getMessage(), $e);
+                throw new UserException("Google API error: " . $e->getMessage(), $e->getCode(), $e);
             }
-            throw new ApplicationException("Application Error", 500, $e, [
+            throw new ApplicationException($e->getMessage(), 500, $e, [
                 'response' => $e->getResponse()->getBody()->getContents()
             ]);
         }
