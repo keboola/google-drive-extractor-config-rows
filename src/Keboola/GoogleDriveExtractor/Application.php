@@ -83,7 +83,7 @@ class Application
             if ($e->getCode() == 403) {
                 if (strtolower($e->getResponse()->getReasonPhrase()) == 'forbidden') {
                     $this->container['logger']->warning(
-                        "You don't have access to Google Analytics resource.
+                        "You don't have access to Google Drive resource.
                         Probably you don't have access to profile, or profile doesn't exists anymore."
                     );
                     return [];
@@ -97,7 +97,9 @@ class Application
             if ($e->getCode() == 503) {
                 throw new UserException("Google API error: " . $e->getMessage(), $e);
             }
-            throw new ApplicationException($e->getResponse()->getBody(), 500, $e);
+            throw new ApplicationException("Application Error", 500, $e, [
+                'response' => $e->getResponse()->getBody()->getContents()
+            ]);
         }
     }
 
