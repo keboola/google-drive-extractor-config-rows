@@ -132,7 +132,7 @@ class Extractor
             if (!empty($response['values'])) {
                 $this->output->write($response['values']);
             }
-            
+
             $offset += $limit;
         }
 
@@ -155,9 +155,9 @@ class Extractor
         return false;
     }
 
-    private function getRange($sheetTitle, $columnCount, $rowOffset = 1, $rowLimit = 1000)
+    public function getRange($sheetTitle, $columnCount, $rowOffset = 1, $rowLimit = 1000)
     {
-        $lastColumn = $this->getColumnA1($columnCount - 1);
+        $lastColumn = $this->getColumnA1($columnCount-1);
 
         $start = 'A' . $rowOffset;
         $end = $lastColumn . ($rowOffset + $rowLimit - 1);
@@ -170,9 +170,9 @@ class Extractor
         $alphas = range('A', 'Z');
 
         $prefix = '';
-        if ($columnNumber > 26) {
+        if ($columnNumber > 25) {
             $quotient = intval(floor($columnNumber/26));
-            $prefix = $alphas[$quotient];
+            $prefix = $alphas[$quotient-1];
         }
 
         $remainder = $columnNumber%26;
