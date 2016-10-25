@@ -37,13 +37,13 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $this->config = $this->makeConfig($this->testFile);
     }
 
-    private function prepareTestFile($path, $name)
+    protected function prepareTestFile($path, $name)
     {
         $file = $this->googleDriveApi->createFile($path, $name);
         return $this->googleDriveApi->getSpreadsheet($file['id']);
     }
 
-    private function makeConfig($testFile)
+    protected function makeConfig($testFile)
     {
         $config = Yaml::parse(file_get_contents(ROOT_PATH . '/tests/data/config.yml'));
         $config['parameters']['data_dir'] = ROOT_PATH . '/tests/data';

@@ -42,7 +42,10 @@ class Output
             mkdir($outTablesDir, 0777, true);
         }
 
-        $this->csv = new CsvFile($outTablesDir . '/' . $sheet['fileId'] . "_" . $sheet['sheetId'] . ".csv");
+        $filename = $outTablesDir . '/' . $sheet['fileId'] . "_" . $sheet['sheetId'] . ".csv";
+        touch($filename);
+
+        $this->csv = new CsvFile($filename);
         $this->header = null;
         $this->sheetCfg = $sheet;
 

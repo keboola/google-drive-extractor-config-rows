@@ -27,6 +27,8 @@ class Processor
         $this->config = $config;
         $this->inputCsv = $inputCsv;
         $this->outputFile = substr($inputCsv->getPathname(), 0, (count($inputCsv->getPathname()) - 5)) . '_out.csv';
+        touch($this->outputFile);
+
         $this->outputCsv = new CsvFile($this->outputFile);
     }
 

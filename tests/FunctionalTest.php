@@ -33,6 +33,30 @@ class FunctionalTest extends BaseTest
         );
     }
 
+    public function testRunEmptyFile()
+    {
+        $emptyFilePath = ROOT_PATH . '/tests/data/in/empty.csv';
+        touch($emptyFilePath);
+
+        $this->testFile = $this->prepareTestFile($emptyFilePath, 'empty');
+        $this->config = $this->makeConfig($this->testFile);
+
+        $process = $this->runProcess();
+        $this->assertEquals(0, $process->getExitCode());
+
+        $fileId = $this->config['parameters']['sheets'][0]['fileId'];
+        $sheetId = $this->config['parameters']['sheets'][0]['sheetId'];
+
+        $this->assertFileEquals(
+            $emptyFilePath,
+            $this->dataPath . '/out/tables/' . $this->getOutputFileName($fileId, $sheetId),
+            "",
+            true
+        );
+
+        unlink($emptyFilePath);
+    }
+
     /**
      * @return Process
      */
