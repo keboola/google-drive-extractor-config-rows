@@ -24,13 +24,13 @@ parameters:
       enabled: true
 ```
 
-## Oauth Registration
+## OAuth Registration
 
 Note that this extractor is using [Keboola OAuth Bundle](https://github.com/keboola/oauth-v2-bundle) to store OAuth credentials.
 
 1. Create application in Google Developer console
 
-Go to `Credentials` section and create new credentials of type `oAuth Client ID`. Use `https://SYRUP_INSTANCE.keboola.com/oauth-v2/authorize/keboola.ex-google-drive/callback` as redirec URI.
+Go to `Credentials` section and create new credentials of type `OAuth Client ID`. Use `https://SYRUP_INSTANCE.keboola.com/oauth-v2/authorize/keboola.ex-google-drive/callback` as redirec URI.
 
 2. Register application in Keboola Oauth [http://docs.oauthv2.apiary.io/#reference/manage/addlist-supported-api/add-new-component](http://docs.oauthv2.apiary.io/#reference/manage/addlist-supported-api/add-new-component)
 
