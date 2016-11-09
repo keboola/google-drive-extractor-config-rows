@@ -24,7 +24,28 @@ parameters:
       enabled: true
 ```
 
+## Oauth Registration
+
 Note that this extractor is using [Keboola OAuth Bundle](https://github.com/keboola/oauth-v2-bundle) to store OAuth credentials.
+
+1. Create application in Google Developer console
+
+Go to `Credentials` section and create new credentials of type `oAuth Client ID`. Use `https://SYRUP_INSTANCE.keboola.com/oauth-v2/authorize/keboola.ex-google-drive/callback` as redirec URI.
+
+2. Register application in Keboola Oauth [http://docs.oauthv2.apiary.io/#reference/manage/addlist-supported-api/add-new-component](http://docs.oauthv2.apiary.io/#reference/manage/addlist-supported-api/add-new-component)
+
+
+```
+{ 
+    "component_id": "keboola.ex-google-drive",
+    "friendly_name": "Google Drive Extractor",
+    "app_key": "XXX.apps.googleusercontent.com",
+    "app_secret": "",
+    "auth_url": "https://accounts.google.com/o/oauth2/v2/auth?response_type=code&redirect_uri=%%redirect_uri%%&client_id=%%client_id%%&access_type=offline&prompt=consent&scope=https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/spreadsheets.readonly",
+    "token_url": "https://www.googleapis.com/oauth2/v4/token",
+    "oauth_version": "2.0"
+}
+```
 
 ## Development
 
