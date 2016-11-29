@@ -75,16 +75,6 @@ class Output
         }
     }
 
-    /**
-     * @param $sheet
-     * @return CsvFile
-     */
-    public function process($sheet)
-    {
-        $processor = new Processor($this->csv, $sheet);
-        return $processor->process();
-    }
-
     public function createManifest($filename, $outputTable)
     {
         $outFilename = $filename . '.manifest';

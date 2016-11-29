@@ -30,7 +30,7 @@ class ApplicationTest extends BaseTest
         $this->application->run();
 
         $outputPath = sprintf(
-            '%s/tests/data/out/tables/%s_%s_out.csv',
+            '%s/tests/data/out/tables/%s_%s.csv',
             ROOT_PATH,
             $this->testFile['spreadsheetId'],
             $this->testFile['sheets'][0]['properties']['sheetId']

@@ -82,7 +82,7 @@ class Extractor
             }
 
             try {
-                $this->export($spreadsheet, $sheet);
+                $outputCsv = $this->export($spreadsheet, $sheet);
             } catch (RequestException $e) {
                 $userException = new UserException(
                     sprintf(
@@ -102,7 +102,6 @@ class Extractor
                 throw $userException;
             }
 
-            $outputCsv = $this->output->process($sheet);
             $this->output->createManifest($outputCsv->getPathname(), $sheet['outputTable']);
 
             $status[$sheet['fileTitle']][$sheet['sheetTitle']] = 'success';

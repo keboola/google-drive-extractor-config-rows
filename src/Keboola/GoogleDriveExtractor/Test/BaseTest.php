@@ -78,6 +78,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 
     protected function getOutputFileName($fileId, $sheetId)
     {
-        return $fileId . '_' . $sheetId . '_out.csv';
+        return $fileId . '_' . $sheetId . '.csv';
     }
 }
