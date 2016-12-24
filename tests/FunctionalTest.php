@@ -57,6 +57,31 @@ class FunctionalTest extends BaseTest
         unlink($emptyFilePath);
     }
 
+    public function testSanitizeHeader()
+    {
+        $filePath = ROOT_PATH . '/tests/data/in/sanitize.csv';
+        touch($filePath);
+        file_put_contents($filePath, '"Weird-[]./;-_*Chars", "Second column", "# poops per day"');
+
+        $this->testFile = $this->prepareTestFile($filePath, 'sanitize');
+        $this->config = $this->makeConfig($this->testFile);
+
+        $process = $this->runProcess();
+        $this->assertEquals(0, $process->getExitCode());
+
+        $fileId = $this->config['parameters']['sheets'][0]['fileId'];
+        $sheetId = $this->config['parameters']['sheets'][0]['sheetId'];
+
+        $this->assertEquals(
+            '"Weird_Chars","Second_column","count_poops_per_day"' . PHP_EOL,
+            file_get_contents(
+                $this->dataPath . '/out/tables/' . $this->getOutputFileName($fileId, $sheetId)
+            )
+        );
+
+        unlink($filePath);
+    }
+
     /**
      * @return Process
      */

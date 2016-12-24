@@ -62,6 +62,12 @@ class Output
         $headerLength = count($this->header);
 
         foreach ($data as $k => $row) {
+            // backward compatibility fix
+            if ($this->sheetCfg['header']['rows'] == 1 && $k == 0) {
+                if (!isset($this->sheetCfg['header']['sanitize']) || $this->sheetCfg['header']['sanitize'] != false) {
+                    $row = $this->normalizeCsvHeader($row);
+                }
+            }
             $rowLength = count($row);
             if ($rowLength > $headerLength) {
                 throw new UserException(sprintf(
@@ -85,5 +91,13 @@ class Output
         ];
 
         return file_put_contents($outFilename, Yaml::dump($manifestData));
+    }
+
+    protected function normalizeCsvHeader($header)
+    {
+        foreach ($header as &$col) {
+            $col = Utility::sanitize($col);
+        }
+        return $header;
     }
 }
