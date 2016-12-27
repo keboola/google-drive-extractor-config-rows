@@ -52,7 +52,7 @@ class Output
         return $this->csv;
     }
 
-    public function write($data)
+    public function write($data, $offset)
     {
         if ($this->header == null) {
             $headerRowNum = $this->sheetCfg['header']['rows'] - 1;
@@ -63,7 +63,7 @@ class Output
 
         foreach ($data as $k => $row) {
             // backward compatibility fix
-            if ($this->sheetCfg['header']['rows'] == 1 && $k == 0) {
+            if ($this->sheetCfg['header']['rows'] == 1 && $k == 0 && $offset == 1) {
                 if (!isset($this->sheetCfg['header']['sanitize']) || $this->sheetCfg['header']['sanitize'] != false) {
                     $row = $this->normalizeCsvHeader($row);
                 }

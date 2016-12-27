@@ -129,7 +129,7 @@ class Extractor
             );
 
             if (!empty($response['values'])) {
-                $this->output->write($response['values']);
+                $this->output->write($response['values'], $offset);
             }
 
             $offset += $limit;
