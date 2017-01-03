@@ -70,12 +70,7 @@ class Output
             }
             $rowLength = count($row);
             if ($rowLength > $headerLength) {
-                throw new UserException(sprintf(
-                    "Row %s has more columns (%s) then header (%s).",
-                    $k,
-                    $rowLength,
-                    $headerLength
-                ));
+                $row = array_slice($row, 0, $headerLength);
             }
             $this->csv->writeRow(array_pad($row, $headerLength, ""));
         }
