@@ -1,8 +1,13 @@
-language: php
+sudo: required
+
+language: bash
+
+services:
+  - docker
+  - php
 
 php:
 - '5.6'
-- '7'
 
 before_script:
   - composer self-update
@@ -12,6 +17,10 @@ script:
   - ./vendor/bin/phpcs --standard=psr2 -n --ignore=vendor --extensions=php .
   - ./vendor/bin/phpunit
   - ./vendor/bin/test-reporter
+
+after_success:
+  - docker build -t google-drive-extractor .
+  - docker images
 
 deploy:
   provider: script
