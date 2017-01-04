@@ -161,7 +161,7 @@ class Extractor
         $start = 'A' . $rowOffset;
         $end = $lastColumn . ($rowOffset + $rowLimit - 1);
 
-        return $sheetTitle . '!' . $start . ':' . $end;
+        return urlencode($sheetTitle) . '!' . $start . ':' . $end;
     }
 
     private function getColumnA1($columnNumber)

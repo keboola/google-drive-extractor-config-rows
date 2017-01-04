@@ -139,7 +139,7 @@ class Client
             sprintf(
                 '%s%s/values/%s',
                 self::SPREADSHEETS,
-                urlencode($spreadsheetId),
+                $spreadsheetId,
                 $range
             ),
             'GET',
