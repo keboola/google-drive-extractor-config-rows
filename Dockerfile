@@ -7,4 +7,4 @@ WORKDIR /code
 RUN composer selfupdate
 RUN composer install --no-interaction
 
-CMD php ./src/run.php --data=/data
+CMD php ./run.php --data=/data
