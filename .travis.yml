@@ -4,7 +4,6 @@ language: php
 
 services:
   - docker
-  - php
 
 php:
 - '5.6'
