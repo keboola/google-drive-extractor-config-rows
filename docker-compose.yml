@@ -3,7 +3,7 @@ app:
   volumes:
     - .:/code
   working_dir: /code
-  entrypoint: bash -c "composer install && phpunit.sh"
+  entrypoint: ./phpunit.sh
   tty: true
   stdin_open: true
   environment:
