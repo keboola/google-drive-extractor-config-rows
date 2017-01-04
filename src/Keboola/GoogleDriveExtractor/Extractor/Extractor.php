@@ -82,7 +82,7 @@ class Extractor
             }
 
             try {
-                $outputCsv = $this->export($spreadsheet, $sheet);
+                $this->export($spreadsheet, $sheet);
             } catch (RequestException $e) {
                 $userException = new UserException(
                     sprintf(
@@ -102,8 +102,6 @@ class Extractor
                 throw $userException;
             }
 
-            $this->output->createManifest($outputCsv->getPathname(), $sheet['outputTable']);
-
             $status[$sheet['fileTitle']][$sheet['sheetTitle']] = 'success';
         }
 
@@ -112,9 +110,7 @@ class Extractor
 
     private function export($spreadsheet, $sheetCfg)
     {
-        $csv = $this->output->createCsv($sheetCfg);
         $sheet = $this->getSheetById($spreadsheet['sheets'], $sheetCfg['sheetId']);
-
         $rowCount = $sheet['properties']['gridProperties']['rowCount'];
         $columnCount = $sheet['properties']['gridProperties']['columnCount'];
         $offset = 1;
@@ -129,13 +125,17 @@ class Extractor
             );
 
             if (!empty($response['values'])) {
+                if ($offset == 1) {
+                    // it is a first run
+                    $csv = $this->output->createCsv($sheetCfg);
+                    $this->output->createManifest($csv->getPathname(), $sheetCfg['outputTable']);
+                }
+
                 $this->output->write($response['values'], $offset);
             }
 
             $offset += $limit;
         }
-
-        return $csv;
     }
 
     /**

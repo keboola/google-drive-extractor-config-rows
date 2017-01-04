@@ -54,6 +54,10 @@ class Output
 
     public function write($data, $offset)
     {
+        if ($this->csv === null) {
+            return;
+        }
+
         if ($this->header == null) {
             $headerRowNum = $this->sheetCfg['header']['rows'] - 1;
             $this->header = $data[$headerRowNum];

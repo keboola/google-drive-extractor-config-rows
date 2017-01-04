@@ -20,7 +20,7 @@ class FunctionalTest extends BaseTest
     public function testRun()
     {
         $process = $this->runProcess();
-        $this->assertEquals(0, $process->getExitCode());
+        $this->assertEquals(0, $process->getExitCode(), $process->getErrorOutput());
 
         $fileId = $this->config['parameters']['sheets'][0]['fileId'];
         $sheetId = $this->config['parameters']['sheets'][0]['sheetId'];
@@ -42,17 +42,14 @@ class FunctionalTest extends BaseTest
         $this->config = $this->makeConfig($this->testFile);
 
         $process = $this->runProcess();
-        $this->assertEquals(0, $process->getExitCode());
+        $this->assertEquals(0, $process->getExitCode(), $process->getErrorOutput());
 
         $fileId = $this->config['parameters']['sheets'][0]['fileId'];
         $sheetId = $this->config['parameters']['sheets'][0]['sheetId'];
 
-        $this->assertFileEquals(
-            $emptyFilePath,
-            $this->dataPath . '/out/tables/' . $this->getOutputFileName($fileId, $sheetId),
-            "",
-            true
-        );
+        $outputFilepath = $this->dataPath . '/out/tables/' . $this->getOutputFileName($fileId, $sheetId);
+        $this->assertFileNotExists($outputFilepath);
+        $this->assertFileNotExists($outputFilepath . '.manifest');
 
         unlink($emptyFilePath);
     }
@@ -67,7 +64,7 @@ class FunctionalTest extends BaseTest
         $this->config = $this->makeConfig($this->testFile);
 
         $process = $this->runProcess();
-        $this->assertEquals(0, $process->getExitCode());
+        $this->assertEquals(0, $process->getExitCode(), $process->getErrorOutput());
 
         $fileId = $this->config['parameters']['sheets'][0]['fileId'];
         $sheetId = $this->config['parameters']['sheets'][0]['sheetId'];
