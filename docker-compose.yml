@@ -1,14 +1,14 @@
-app:
-  build: .
-  volumes:
-    - .:/code
-  working_dir: /code
-  entrypoint: ./phpunit.sh
-  tty: true
-  stdin_open: true
-  environment:
-    CLIENT_ID: $CLIENT_ID
-    CLIENT_SECRET: $CLIENT_SECRET
-    ACCESS_TOKEN: $ACCESS_TOKEN
-    REFRESH_TOKEN: $REFRESH_TOKEN
-    CODECLIMATE_REPO_TOKEN: $CODECLIMATE_REPO_TOKEN
+version: "2"
+services:
+  app:
+    build: .
+    image: keboola/google-drive-extractor
+    tty: true
+    stdin_open: true
+    command: ./phpunit.sh
+    environment:
+      CLIENT_ID: $CLIENT_ID
+      CLIENT_SECRET: $CLIENT_SECRET
+      ACCESS_TOKEN: $ACCESS_TOKEN
+      REFRESH_TOKEN: $REFRESH_TOKEN
+      CODECLIMATE_REPO_TOKEN: $CODECLIMATE_REPO_TOKEN
