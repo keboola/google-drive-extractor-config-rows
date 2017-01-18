@@ -6,7 +6,6 @@ services:
   - docker
 
 install:
-  - docker-compose run --rm app composer install -n
   - docker-compose build app
 
 script:
