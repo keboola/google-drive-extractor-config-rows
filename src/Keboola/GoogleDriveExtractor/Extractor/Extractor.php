@@ -69,7 +69,7 @@ class Extractor
                 $spreadsheet = $this->driveApi->getSpreadsheet($sheet['fileId']);
             } catch (RequestException $e) {
                 if ($e->getResponse()->getStatusCode() == 404) {
-                    throw new UserException(sprintf("File '%s' not found in Google Drive", $sheet['sheetName']), 404, $e);
+                    throw new UserException(sprintf("File '%s' not found in Google Drive", $sheet['sheetTitle']), 404, $e);
                 } else {
                     $userException = new UserException("Google Drive Error: " . $e->getMessage(), 400, $e);
                     $userException->setData(array(
