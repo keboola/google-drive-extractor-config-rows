@@ -7,3 +7,4 @@ tests.sh
 tokens.php
 /tests/data/out
 run.sh
+.DS_Store

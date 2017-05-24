@@ -80,6 +80,8 @@ class ConfigDefinition implements ConfigurationInterface
                                             ->end()
                                         ->end()
                                     ->end()
+                                    ->booleanNode('sanitize')
+                                    ->end()
                                 ->end()
                             ->end()
                             ->arrayNode('transform')
