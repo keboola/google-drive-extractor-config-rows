@@ -164,9 +164,9 @@ class Extractor
         $letter = '';
 
         while ($column > 0) {
-          $remainder = $column % 26;
-          $letter = $alphas[$remainder-1] . $letter;
-          $column = ($column - $remainder) / 26;
+            $remainder = ($column - 1) % 26;
+            $letter = $alphas[$remainder] . $letter;
+            $column = ($column - $remainder - 1) / 26;
         }
 
         return $letter;

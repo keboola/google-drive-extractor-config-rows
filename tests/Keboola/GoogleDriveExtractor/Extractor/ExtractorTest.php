@@ -1,5 +1,7 @@
 <?php
 
+namespace Keboola\GoogleDriveExtractor\Tests;
+
 use Keboola\Google\ClientBundle\Google\RestApi;
 use Keboola\GoogleDriveExtractor\Extractor\Extractor;
 use Keboola\GoogleDriveExtractor\Extractor\Output;
@@ -31,6 +33,9 @@ class ExtractorTest extends \PHPUnit_Framework_TestCase
 
         $notation = $this->extractor->columnToLetter(1);
         $this->assertEquals('A', $notation);
+
+        $notation = $this->extractor->columnToLetter(26);
+        $this->assertEquals('Z', $notation);
 
         $notation = $this->extractor->columnToLetter(27);
         $this->assertEquals('AA', $notation);
