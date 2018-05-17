@@ -6,19 +6,10 @@ services:
   - docker
 
 install:
-  - docker-compose build app
+  - docker-compose build tests
 
 script:
-  - docker-compose run --rm app
-
-after_success:
-  - docker images
-
-after_error:
-  - docker-compose logs
-
-after_failure:
-  - docker-compose logs
+  - docker-compose run --rm tests
 
 deploy:
   provider: script
