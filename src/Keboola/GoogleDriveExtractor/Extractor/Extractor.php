@@ -1,10 +1,4 @@
 <?php
-/**
- * Extractor.php
- *
- * @author: Miroslav Čillík <miro@keboola.com>
- * @created: 29.7.13
- */
 
 namespace Keboola\GoogleDriveExtractor\Extractor;
 
@@ -156,7 +150,7 @@ class Extractor
 
     public function getRange($sheetTitle, $columnCount, $rowOffset = 1, $rowLimit = 1000)
     {
-        $lastColumn = $this->getColumnA1($columnCount-1);
+        $lastColumn = $this->columnToLetter($columnCount);
 
         $start = 'A' . $rowOffset;
         $end = $lastColumn . ($rowOffset + $rowLimit - 1);
@@ -164,19 +158,18 @@ class Extractor
         return urlencode($sheetTitle) . '!' . $start . ':' . $end;
     }
 
-    private function getColumnA1($columnNumber)
+    public function columnToLetter($column)
     {
         $alphas = range('A', 'Z');
+        $letter = '';
 
-        $prefix = '';
-        if ($columnNumber > 25) {
-            $quotient = intval(floor($columnNumber/26));
-            $prefix = $alphas[$quotient-1];
+        while ($column > 0) {
+          $remainder = $column % 26;
+          $letter = $alphas[$remainder-1] . $letter;
+          $column = ($column - $remainder) / 26;
         }
 
-        $remainder = $columnNumber%26;
-
-        return $prefix . $alphas[$remainder];
+        return $letter;
     }
 
     public function refreshTokenCallback($accessToken, $refreshToken)
