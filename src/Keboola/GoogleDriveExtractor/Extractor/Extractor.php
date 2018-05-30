@@ -26,7 +26,7 @@ class Extractor
         $this->logger = $logger;
         $this->output = $output;
 
-        $this->driveApi->getApi()->setBackoffsCount(7);
+        $this->driveApi->getApi()->setBackoffsCount(9);
         $this->driveApi->getApi()->setBackoffCallback403($this->getBackoffCallback403());
         $this->driveApi->getApi()->setRefreshTokenCallback([$this, 'refreshTokenCallback']);
     }
