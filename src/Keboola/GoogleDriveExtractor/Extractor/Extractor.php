@@ -52,6 +52,8 @@ class Extractor
     {
         $status = [];
 
+        $exceptionHandler = new ExceptionHandler();
+
         foreach ($sheets as $sheet) {
             if (!$sheet['enabled']) {
                 continue;
@@ -61,39 +63,14 @@ class Extractor
 
             try {
                 $spreadsheet = $this->driveApi->getSpreadsheet($sheet['fileId']);
-            } catch (RequestException $e) {
-                if ($e->getResponse()->getStatusCode() == 404) {
-                    throw new UserException(sprintf("File '%s' not found in Google Drive", $sheet['sheetTitle']), 404, $e);
-                } else {
-                    $userException = new UserException("Google Drive Error: " . $e->getMessage(), 400, $e);
-                    $userException->setData(array(
-                        'message' => $e->getMessage(),
-                        'reason'  => $e->getResponse()->getReasonPhrase(),
-                        'sheet'   => $sheet
-                    ));
-                    throw $userException;
-                }
+            } catch (\Exception $e) {
+                $exceptionHandler->handleGetSpreadsheetException($e, $sheet);
             }
 
             try {
                 $this->export($spreadsheet, $sheet);
-            } catch (RequestException $e) {
-                $userException = new UserException(
-                    sprintf(
-                        "Error importing file - sheet: '%s - %s'",
-                        $sheet['fileTitle'],
-                        $sheet['sheetTitle']
-                    ),
-                    400,
-                    $e
-                );
-                $userException->setData(array(
-                    'message' => $e->getMessage(),
-                    'reason'  => $e->getResponse()->getReasonPhrase(),
-                    'body'    => substr($e->getResponse()->getBody()->getContents(), 0, 300),
-                    'sheet'   => $sheet
-                ));
-                throw $userException;
+            } catch (\Exception $e) {
+                $exceptionHandler->handleExportException($e, $sheet);
             }
 
             $status[$sheet['fileTitle']][$sheet['sheetTitle']] = 'success';
