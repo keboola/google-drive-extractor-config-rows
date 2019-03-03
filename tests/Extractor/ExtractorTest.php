@@ -1,14 +1,15 @@
 <?php
 
-namespace Keboola\GoogleDriveExtractor\Tests;
+namespace Keboola\GoogleDriveExtractor\Tests\Extractor;
 
 use Keboola\Google\ClientBundle\Google\RestApi;
 use Keboola\GoogleDriveExtractor\Extractor\Extractor;
 use Keboola\GoogleDriveExtractor\Extractor\Output;
 use Keboola\GoogleDriveExtractor\GoogleDrive\Client;
 use Keboola\GoogleDriveExtractor\Logger;
+use PHPUnit\Framework\TestCase;
 
-class ExtractorTest extends \PHPUnit_Framework_TestCase
+class ExtractorTest extends TestCase
 {
     /** @var Client */
     private $googleDriveClient;

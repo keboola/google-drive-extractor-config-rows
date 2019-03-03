@@ -10,10 +10,6 @@
          syntaxCheck="false"
          bootstrap="bootstrap.php">
 
-    <php>
-        <const name="ROOT_PATH" value="."/>
-    </php>
-
     <testsuite name="Google Drive Extractor Test Suite">
         <directory>tests</directory>
     </testsuite>
