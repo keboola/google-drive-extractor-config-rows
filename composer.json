@@ -31,5 +31,10 @@
     "psr-4": {
       "Keboola\\": "src/Keboola/"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Keboola\\GoogleDriveExtractor\\Tests\\": "tests/"
+    }
   }
 }

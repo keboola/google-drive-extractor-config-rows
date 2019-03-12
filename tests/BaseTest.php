@@ -6,13 +6,13 @@
  * Time: 16:49
  */
 
-namespace Keboola\GoogleDriveExtractor\Test;
+namespace Keboola\GoogleDriveExtractor\Tests;
 
 use Keboola\Google\ClientBundle\Google\RestApi;
 use Keboola\GoogleDriveExtractor\GoogleDrive\Client;
 use Symfony\Component\Yaml\Yaml;
 
-class BaseTest extends \PHPUnit_Framework_TestCase
+abstract class BaseTest extends \PHPUnit_Framework_TestCase
 {
     /** @var Client */
     private $googleDriveApi;

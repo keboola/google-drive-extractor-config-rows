@@ -9,9 +9,6 @@
 namespace Keboola\GoogleDriveExtractor\Tests;
 
 use Keboola\GoogleDriveExtractor\Application;
-use Keboola\GoogleDriveExtractor\Test\BaseTest;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;
 
 class ApplicationTest extends BaseTest

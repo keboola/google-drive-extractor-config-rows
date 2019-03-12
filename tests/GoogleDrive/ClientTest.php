@@ -1,10 +1,10 @@
 <?php
 
-namespace Keboola\GoogleDriveExtractor\Tests;
+namespace Keboola\GoogleDriveExtractor\Tests\GoogleDrive;
 
 use Keboola\Google\ClientBundle\Google\RestApi;
 use Keboola\GoogleDriveExtractor\GoogleDrive\Client;
-use Keboola\GoogleDriveExtractor\Test\BaseTest;
+use Keboola\GoogleDriveExtractor\Tests\BaseTest;
 
 /**
  * Created by PhpStorm.

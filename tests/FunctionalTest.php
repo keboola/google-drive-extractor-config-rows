@@ -7,8 +7,6 @@
  */
 namespace Keboola\GoogleDriveExtractor\Tests;
 
-use Keboola\Csv\CsvFile;
-use Keboola\GoogleDriveExtractor\Test\BaseTest;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;
