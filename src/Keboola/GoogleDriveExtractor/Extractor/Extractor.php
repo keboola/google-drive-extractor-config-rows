@@ -82,7 +82,7 @@ class Extractor
         $rowCount = $sheet['properties']['gridProperties']['rowCount'];
         $columnCount = $sheet['properties']['gridProperties']['columnCount'];
         $offset = 1;
-        $limit = 1000;
+        $limit = 500;
 
         while ($offset <= $rowCount) {
             $range = $this->getRange($sheet['properties']['title'], $columnCount, $offset, $limit);
