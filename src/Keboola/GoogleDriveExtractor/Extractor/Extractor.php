@@ -56,15 +56,15 @@ class Extractor
                 continue;
             }
 
-            $this->logger->info('Importing sheet ' . $sheet['sheetTitle']);
-
             try {
                 $spreadsheet = $this->driveApi->getSpreadsheet($sheet['fileId']);
+                $this->logger->info('Obtained spreadsheet metadata');
             } catch (\Exception $e) {
                 $exceptionHandler->handleGetSpreadsheetException($e, $sheet);
             }
 
             try {
+                $this->logger->info('Extracting sheet ' . $sheet['sheetTitle']);
                 $this->export($spreadsheet, $sheet);
             } catch (\Exception $e) {
                 $exceptionHandler->handleExportException($e, $sheet);
@@ -85,6 +85,7 @@ class Extractor
         $limit = 500;
 
         while ($offset <= $rowCount) {
+            $this->logger->info(sprintf('Extracting rows %s to %s', $offset, $offset+$limit));
             $range = $this->getRange($sheet['properties']['title'], $columnCount, $offset, $limit);
 
             $response = $this->driveApi->getSpreadsheetValues(
