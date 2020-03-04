@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GoogleDriveExtractor\Extractor;
 
+use Keboola\GoogleDriveExtractor\Exception\UserException;
 use Keboola\GoogleDriveExtractor\GoogleDrive\Client;
 use Monolog\Logger;
 use Psr\Http\Message\ResponseInterface;
@@ -28,15 +31,15 @@ class Extractor
         $this->driveApi->getApi()->setRefreshTokenCallback([$this, 'refreshTokenCallback']);
     }
 
-    public function getBackoffCallback403()
+    public function getBackoffCallback403(): callable
     {
         return function ($response) {
             /** @var ResponseInterface $response */
             $reason = $response->getReasonPhrase();
 
-            if ($reason == 'insufficientPermissions'
-                || $reason == 'dailyLimitExceeded'
-                || $reason == 'usageLimits.userRateLimitExceededUnreg'
+            if ($reason === 'insufficientPermissions'
+                || $reason === 'dailyLimitExceeded'
+                || $reason === 'usageLimits.userRateLimitExceededUnreg'
             ) {
                 return false;
             }
@@ -45,10 +48,9 @@ class Extractor
         };
     }
 
-    public function run(array $sheets)
+    public function run(array $sheets): array
     {
         $status = [];
-
         $exceptionHandler = new ExceptionHandler();
 
         foreach ($sheets as $sheet) {
@@ -59,15 +61,15 @@ class Extractor
             try {
                 $spreadsheet = $this->driveApi->getSpreadsheet($sheet['fileId']);
                 $this->logger->info('Obtained spreadsheet metadata');
-            } catch (\Exception $e) {
-                $exceptionHandler->handleGetSpreadsheetException($e, $sheet);
-            }
 
-            try {
-                $this->logger->info('Extracting sheet ' . $sheet['sheetTitle']);
-                $this->export($spreadsheet, $sheet);
-            } catch (\Exception $e) {
-                $exceptionHandler->handleExportException($e, $sheet);
+                try {
+                    $this->logger->info('Extracting sheet ' . $sheet['sheetTitle']);
+                    $this->export($spreadsheet, $sheet);
+                } catch (\Throwable $e) {
+                    $exceptionHandler->handleExportException($e, $sheet);
+                }
+            } catch (\Throwable $e) {
+                $exceptionHandler->handleGetSpreadsheetException($e, $sheet);
             }
 
             $status[$sheet['fileTitle']][$sheet['sheetTitle']] = 'success';
@@ -76,13 +78,13 @@ class Extractor
         return $status;
     }
 
-    private function export($spreadsheet, $sheetCfg)
+    private function export(array $spreadsheet, array $sheetCfg): void
     {
         $sheet = $this->getSheetById($spreadsheet['sheets'], $sheetCfg['sheetId']);
         $rowCount = $sheet['properties']['gridProperties']['rowCount'];
         $columnCount = $sheet['properties']['gridProperties']['columnCount'];
         $offset = 1;
-        $limit = 500;
+        $limit = 1000;
 
         while ($offset <= $rowCount) {
             $this->logger->info(sprintf('Extracting rows %s to %s', $offset, $offset+$limit));
@@ -94,10 +96,10 @@ class Extractor
             );
 
             if (!empty($response['values'])) {
-                if ($offset == 1) {
+                if ($offset === 1) {
                     // it is a first run
-                    $csv = $this->output->createCsv($sheetCfg);
-                    $this->output->createManifest($csv->getPathname(), $sheetCfg['outputTable']);
+                    $csvFilename = $this->output->createCsv($sheetCfg);
+                    $this->output->createManifest($csvFilename, $sheetCfg['outputTable']);
                 }
 
                 $this->output->write($response['values'], $offset);
@@ -107,23 +109,18 @@ class Extractor
         }
     }
 
-    /**
-     * @param $sheets
-     * @param $id
-     * @return array|bool
-     */
-    private function getSheetById($sheets, $id)
+    private function getSheetById(array $sheets, int $id): array
     {
         foreach ($sheets as $sheet) {
-            if ($sheet['properties']['sheetId'] == $id) {
+            if ((int) $sheet['properties']['sheetId'] === $id) {
                 return $sheet;
             }
         }
 
-        return false;
+        throw new UserException(sprintf('Sheet id "%s" not found', $id));
     }
 
-    public function getRange($sheetTitle, $columnCount, $rowOffset = 1, $rowLimit = 1000)
+    public function getRange(string $sheetTitle, int $columnCount, int $rowOffset = 1, int $rowLimit = 1000): string
     {
         $lastColumn = $this->columnToLetter($columnCount);
 
@@ -133,7 +130,7 @@ class Extractor
         return urlencode($sheetTitle) . '!' . $start . ':' . $end;
     }
 
-    public function columnToLetter($column)
+    public function columnToLetter(int $column): string
     {
         $alphas = range('A', 'Z');
         $letter = '';
@@ -147,7 +144,7 @@ class Extractor
         return $letter;
     }
 
-    public function refreshTokenCallback($accessToken, $refreshToken)
+    public function refreshTokenCallback(string $accessToken, string $refreshToken): void
     {
     }
 }

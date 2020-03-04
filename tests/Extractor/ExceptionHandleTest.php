@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GoogleDriveExtractor\Tests\Extractor;
 
 use GuzzleHttp\Exception\RequestException;
@@ -12,66 +14,65 @@ use PHPUnit\Framework\TestCase;
 
 class ExceptionHandleTest extends TestCase
 {
-    /**
-     * @dataProvider provideExceptionsForGetSpreadsheet
-     */
+    /** @dataProvider provideExceptionsForGetSpreadsheet */
     public function testHandlingOfExceptions(
-        $expectedExceptionClass,
-        $expectedExceptionMessage,
-        \Exception $caughtException,
+        string $expectedExceptionClass,
+        string $expectedExceptionMessage,
+        \Throwable $caughtException,
         array $sheet
-    ) {
+    ): void {
         $handler = new ExceptionHandler();
         $this->expectException($expectedExceptionClass);
         $this->expectExceptionMessage($expectedExceptionMessage);
         $handler->handleGetSpreadsheetException($caughtException, $sheet);
     }
-    /**
-     * @return mixed[][]
-     */
-    public function provideExceptionsForGetSpreadsheet()
+
+    public function provideExceptionsForGetSpreadsheet(): array
     {
         return [
             'invalid grant' => [
                 UserException::class,
                 'Invalid OAuth grant when fetching "File title", try reauthenticating the extractor',
                 new RequestException(
+                    // phpcs:disable Generic.Files.LineLength
                     'Client error: `POST https://www.googleapis.com/oauth2/v3/token` resulted in a `400 Bad Request` response: { "error": "invalid_grant", "error_description": "Bad Request" }',
                     new Request('whatever', 'git'),
                     new Response(400, [], '{ "error": "invalid_grant", "error_description": "Bad Request" }')
                 ),
                 [
-                    "id" => 2,
-                    "fileId" => "1y_XXXXXXXXXXX",
-                    "fileTitle" => "File title",
-                    "sheetId" => "SheetIdXxxxx",
-                    "sheetTitle" => "Title XXXXXX",
-                    "outputTable" => "table",
-                    "header" => ["rows" => 1, "columns" => []],
-                    "enabled" => true,
+                    'id' => 2,
+                    'fileId' => '1y_XXXXXXXXXXX',
+                    'fileTitle' => 'File title',
+                    'sheetId' => 'SheetIdXxxxx',
+                    'sheetTitle' => 'Title XXXXXX',
+                    'outputTable' => 'table',
+                    'header' => ['rows' => 1, 'columns' => []],
+                    'enabled' => true,
                 ],
             ],
             'http404' => [
                 UserException::class,
                 'File "Title XXXXXX" not found in Google Drive',
                 new RequestException(
+                    // phpcs:disable Generic.Files.LineLength
                     'Client error: `POST https://www.googleapis.com/oauth2/v3/token` resulted in a `400 Bad Request` response: { "error": "invalid_grant", "error_description": "Bad Request" }',
                     new Request('whatever', 'git'),
                     new Response(404, [], '{}')
                 ),
                 [
-                    "id" => 2,
-                    "fileId" => "1y_XXXXXXXXXXX",
-                    "fileTitle" => "FileIdXxxxxx",
-                    "sheetId" => "SheetIdXxxxx",
-                    "sheetTitle" => "Title XXXXXX",
-                    "outputTable" => "table",
-                    "header" => ["rows" => 1, "columns" => []],
-                    "enabled" => true,
+                    'id' => 2,
+                    'fileId' => '1y_XXXXXXXXXXX',
+                    'fileTitle' => 'FileIdXxxxxx',
+                    'sheetId' => 'SheetIdXxxxx',
+                    'sheetTitle' => 'Title XXXXXX',
+                    'outputTable' => 'table',
+                    'header' => ['rows' => 1, 'columns' => []],
+                    'enabled' => true,
                 ],
             ],
             'other request exception without description' => [
                 UserException::class,
+                // phpcs:disable Generic.Files.LineLength
                 'Google Drive Error: Client error: `POST https://www.googleapis.com/oauth2/v3/token` resulted in a `400 Bad Request` response: { "error": "invalid_grant", "error_description": "Bad Request" }',
                 new RequestException(
                     'Client error: `POST https://www.googleapis.com/oauth2/v3/token` resulted in a `400 Bad Request` response: { "error": "invalid_grant", "error_description": "Bad Request" }',
@@ -79,35 +80,35 @@ class ExceptionHandleTest extends TestCase
                     new Response(403, [], '{}')
                 ),
                 [
-                    "id" => 2,
-                    "fileId" => "1y_XXXXXXXXXXX",
-                    "fileTitle" => "FileIdXxxxxx",
-                    "sheetId" => "SheetIdXxxxx",
-                    "sheetTitle" => "Title XXXXXX",
-                    "outputTable" => "table",
-                    "header" => ["rows" => 1, "columns" => []],
-                    "enabled" => true,
+                    'id' => 2,
+                    'fileId' => '1y_XXXXXXXXXXX',
+                    'fileTitle' => 'FileIdXxxxxx',
+                    'sheetId' => 'SheetIdXxxxx',
+                    'sheetTitle' => 'Title XXXXXX',
+                    'outputTable' => 'table',
+                    'header' => ['rows' => 1, 'columns' => []],
+                    'enabled' => true,
                 ],
             ],
             'other request exception with description' => [
                 UserException::class,
                 '"The column AX is not in the sheet" (out_of_range)',
                 new RequestException(
-                    'Client error: `POST
-                             https://www.googleapis.com/oauth2/v3/token` resulted in a `400 Bad Request` response: { "error":
-                            "out_of_range", "error_description": "The column AX is not in the sheet" }',
+                    // phpcs:disable Generic.Files.LineLength
+                    'Client error: `POST https://www.googleapis.com/oauth2/v3/token` resulted in a `400 Bad Request` response: { "error": "out_of_range", "error_description": "The column AX is not in the sheet" }',
                     new Request('whatever', 'git'),
+                    // phpcs:disable Generic.Files.LineLength
                     new Response(403, [], '{ "error": "out_of_range", "error_description": "The column AX is not in the sheet" }')
                 ),
                 [
-                    "id" => 2,
-                    "fileId" => "1y_XXXXXXXXXXX",
-                    "fileTitle" => "FileIdXxxxxx",
-                    "sheetId" => "SheetIdXxxxx",
-                    "sheetTitle" => "Title XXXXXX",
-                    "outputTable" => "table",
-                    "header" => ["rows" => 1, "columns" => []],
-                    "enabled" => true,
+                    'id' => 2,
+                    'fileId' => '1y_XXXXXXXXXXX',
+                    'fileTitle' => 'FileIdXxxxxx',
+                    'sheetId' => 'SheetIdXxxxx',
+                    'sheetTitle' => 'Title XXXXXX',
+                    'outputTable' => 'table',
+                    'header' => ['rows' => 1, 'columns' => []],
+                    'enabled' => true,
                 ],
             ],
             'other random exception' => [
@@ -117,60 +118,55 @@ class ExceptionHandleTest extends TestCase
                     'Timeout'
                 ),
                 [
-                    "id" => 2,
-                    "fileId" => "1y_XXXXXXXXXXX",
-                    "fileTitle" => "FileIdXxxxxx",
-                    "sheetId" => "SheetIdXxxxx",
-                    "sheetTitle" => "Title XXXXXX",
-                    "outputTable" => "table",
-                    "header" => ["rows" => 1, "columns" => []],
-                    "enabled" => true,
+                    'id' => 2,
+                    'fileId' => '1y_XXXXXXXXXXX',
+                    'fileTitle' => 'FileIdXxxxxx',
+                    'sheetId' => 'SheetIdXxxxx',
+                    'sheetTitle' => 'Title XXXXXX',
+                    'outputTable' => 'table',
+                    'header' => ['rows' => 1, 'columns' => []],
+                    'enabled' => true,
                 ],
             ],
             'exception with another response array ' => [
                 UserException::class,
                 '"The caller does not have permission" (PERMISSION_DENIED) for "Title XXXXXX"',
+
                 new RequestException(
-                    'Client error: `POST
-                            https://sheets.googleapis.com/v4/spreadsheets/123` resulted in a `403 Forbidden` response: { "error": {
-                            "code": 403,
-                            "message": "The caller does not have permission",
-                            "status": "PERMISSION_DENIED"
-                            }}',
+                    // phpcs:disable Generic.Files.LineLength
+                    'Client error: `POST https://sheets.googleapis.com/v4/spreadsheets/123` resulted in a `403 Forbidden` response: {"error": {"code": 403,"message": "The caller does not have permission","status": "PERMISSION_DENIED"}}',
                     new Request('whatever', 'git'),
+                    // phpcs:disable Generic.Files.LineLength
                     new Response(400, [], '{ "error": { "code": 403, "message": "The caller does not have permission", "status": "PERMISSION_DENIED" } }')
                 ),
                 [
-                    "id" => 2,
-                    "fileId" => "1y_XXXXXXXXXXX",
-                    "fileTitle" => "File title",
-                    "sheetId" => "SheetIdXxxxx",
-                    "sheetTitle" => "Title XXXXXX",
-                    "outputTable" => "table",
-                    "header" => ["rows" => 1, "columns" => []],
-                    "enabled" => true,
+                    'id' => 2,
+                    'fileId' => '1y_XXXXXXXXXXX',
+                    'fileTitle' => 'File title',
+                    'sheetId' => 'SheetIdXxxxx',
+                    'sheetTitle' => 'Title XXXXXX',
+                    'outputTable' => 'table',
+                    'header' => ['rows' => 1, 'columns' => []],
+                    'enabled' => true,
                 ],
             ],
         ];
     }
-    /**
-     * @dataProvider provideExceptionsForExport
-     */
+
+    /** @dataProvider provideExceptionsForExport */
     public function testExportExceptionHandling(
-        $expectedExceptionClass,
-        $expectedExceptionMessage,
-        \Exception $caughtException,
+        string $expectedExceptionClass,
+        string $expectedExceptionMessage,
+        \Throwable $caughtException,
         array $sheet
-    ) {
+    ): void {
         $handler = new ExceptionHandler();
         $this->expectException($expectedExceptionClass);
         $this->expectExceptionMessage($expectedExceptionMessage);
         $handler->handleExportException($caughtException, $sheet);
     }
-    /**
-     * @return mixed[][]
-     */
-    public function provideExceptionsForExport()
+
+    public function provideExceptionsForExport(): array
     {
         return [
             'Rate limit exceeded' => [
@@ -183,14 +179,14 @@ class ExceptionHandleTest extends TestCase
                     new Response(429, [], '{"error": {"errors": [{"domain": "usageLimits","reason": "rateLimitExceeded","message": "Rate Limit Exceeded"}],"code": 429,"message": "Rate Limit Exceeded"}}')
                 ),
                 [
-                    "id" => 2,
-                    "fileId" => "1y_XXXXXXXXXXX",
-                    "fileTitle" => "FileIdXxxxxx",
-                    "sheetId" => "SheetIdXxxxx",
-                    "sheetTitle" => "Title XXXXXX",
-                    "outputTable" => "table",
-                    "header" => ["rows" => 1, "columns" => []],
-                    "enabled" => true,
+                    'id' => 2,
+                    'fileId' => '1y_XXXXXXXXXXX',
+                    'fileTitle' => 'FileIdXxxxxx',
+                    'sheetId' => 'SheetIdXxxxx',
+                    'sheetTitle' => 'Title XXXXXX',
+                    'outputTable' => 'table',
+                    'header' => ['rows' => 1, 'columns' => []],
+                    'enabled' => true,
                 ],
             ],
         ];

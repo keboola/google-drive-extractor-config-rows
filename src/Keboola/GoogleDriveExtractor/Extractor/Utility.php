@@ -1,22 +1,18 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: miroslavcillik
- * Date: 23/12/16
- * Time: 18:15
- */
+
+declare(strict_types=1);
 
 namespace Keboola\GoogleDriveExtractor\Extractor;
 
 class Utility
 {
-    public static function sanitize($string)
+    public static function sanitize(string $string): string
     {
         $string = str_replace('#', 'count', $string);
         $string = self::unaccent($string);
-        $string = preg_replace("/[\n\r]/", "", $string);
-        $string = preg_replace("/[^A-Za-z0-9_\s]/", '', $string);
-        $string = trim($string);
+        $string = preg_replace("/[\n\r]/", '', $string);
+        $string = preg_replace('/[^A-Za-z0-9_\s]/', '', (string) $string);
+        $string = trim((string) $string);
         $string = str_replace(' ', '_', $string);
         if (strlen($string) < 2) {
             $string = 'empty';
@@ -27,10 +23,10 @@ class Utility
     /**
      * Remove any illegal characters, accents, etc.
      *
-     * @param  string $string  String to unaccent
+     * @param  string $string String to unaccent
      * @return string $string  Unaccented string
      */
-    private static function unaccent($string)
+    private static function unaccent(string $string): string
     {
         if (!preg_match('/[\x80-\xff]/', $string)) {
             return $string;
@@ -153,9 +149,12 @@ class Utility
                 .chr(236).chr(237).chr(238).chr(239).chr(241).chr(242).chr(243)
                 .chr(244).chr(245).chr(246).chr(248).chr(249).chr(250).chr(251)
                 .chr(252).chr(253).chr(255);
-            $chars['out'] = "EfSZszYcYuAAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy";
+            $chars['out'] = 'EfSZszYcYuAAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy';
             $string = strtr($string, $chars['in'], $chars['out']);
-            $doubleChars['in'] = array(chr(140), chr(156), chr(198), chr(208), chr(222), chr(223), chr(230), chr(240), chr(254));
+            $doubleChars['in'] = array(
+                chr(140), chr(156), chr(198), chr(208), chr(222),
+                chr(223), chr(230), chr(240), chr(254)
+            );
             $doubleChars['out'] = array('OE', 'oe', 'AE', 'DH', 'TH', 'ss', 'ae', 'dh', 'th');
             $string = str_replace($doubleChars['in'], $doubleChars['out'], $string);
         }
@@ -169,27 +168,27 @@ class Utility
      * @param  string $string
      * @return boolean $bool
      */
-    private static function seemsUtf8($string)
+    private static function seemsUtf8(string $string): bool
     {
         for ($i = 0; $i < strlen($string); $i++) {
             if (ord($string[$i]) < 0x80) {
-                continue;   # 0bbbbbbb
-            } elseif ((ord($string[$i]) & 0xE0) == 0xC0) {
-                $n=1;       # 110bbbbb
-            } elseif ((ord($string[$i]) & 0xF0) == 0xE0) {
-                $n=2;       # 1110bbbb
-            } elseif ((ord($string[$i]) & 0xF8) == 0xF0) {
-                $n=3;       # 11110bbb
-            } elseif ((ord($string[$i]) & 0xFC) == 0xF8) {
-                $n=4;       # 111110bb
-            } elseif ((ord($string[$i]) & 0xFE) == 0xFC) {
-                $n=5;       # 1111110b
+                continue;   // 0bbbbbbb
+            } elseif ((ord($string[$i]) & 0xE0) === 0xC0) {
+                $n=1;       // 110bbbbb
+            } elseif ((ord($string[$i]) & 0xF0) === 0xE0) {
+                $n=2;       // 1110bbbb
+            } elseif ((ord($string[$i]) & 0xF8) === 0xF0) {
+                $n=3;       // 11110bbb
+            } elseif ((ord($string[$i]) & 0xFC) === 0xF8) {
+                $n=4;       // 111110bb
+            } elseif ((ord($string[$i]) & 0xFE) === 0xFC) {
+                $n=5;       // 1111110b
             } else {
-                return false; # Does not match any model
+                return false; // Does not match any model
             }
             for ($j = 0; $j < $n; $j++) {
-                # n bytes matching 10bbbbbb follow ?
-                if ((++$i == strlen($string)) || ((ord($string[$i]) & 0xC0) != 0x80)) {
+                // n bytes matching 10bbbbbb follow ?
+                if ((++$i === strlen($string)) || ((ord($string[$i]) & 0xC0) !== 0x80)) {
                     return false;
                 }
             }

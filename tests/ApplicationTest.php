@@ -1,10 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: miroslavcillik
- * Date: 19/04/16
- * Time: 10:59
- */
+
+declare(strict_types=1);
 
 namespace Keboola\GoogleDriveExtractor\Tests;
 
@@ -13,28 +9,28 @@ use Symfony\Component\Yaml\Yaml;
 
 class ApplicationTest extends BaseTest
 {
-    /** @var Application */
+    /**@var Application */
     private $application;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->application = new Application($this->config);
     }
 
-    public function testAppRun()
+    public function testAppRun(): void
     {
         $this->application->run();
 
         $outputPath = sprintf(
-            '%s/tests/data/out/tables/%s_%s.csv',
-            ROOT_PATH,
+            '%s/data/out/tables/%s_%s.csv',
+            __DIR__,
             $this->testFile['spreadsheetId'],
             $this->testFile['sheets'][0]['properties']['sheetId']
         );
 
         $manifestPath = $outputPath . '.manifest';
-        $manifest = Yaml::parse(file_get_contents($manifestPath));
+        $manifest = Yaml::parse((string) file_get_contents($manifestPath));
 
         $this->assertArrayHasKey('destination', $manifest);
         $this->assertArrayHasKey('incremental', $manifest);
