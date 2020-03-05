@@ -15,9 +15,6 @@ class Client
 
     protected const SPREADSHEETS = 'https://sheets.googleapis.com/v4/spreadsheets/';
 
-    /** @var array */
-    protected $defaultFields = ['kind', 'id', 'name', 'mimeType', 'parents'];
-
     /** @var GoogleApi */
     protected $api;
 
@@ -88,8 +85,15 @@ class Client
 
     public function getSpreadsheet(string $fileId): array
     {
+        $fields = [
+            'spreadsheetId',
+            'properties.title',
+            'sheets.properties.gridProperties',
+            'sheets.properties.sheetId',
+            'sheets.properties.title',
+        ];
         $response = $this->api->request(
-            sprintf('%s%s', self::SPREADSHEETS, $fileId),
+            $this->addFields(sprintf('%s%s', self::SPREADSHEETS, $fileId), $fields),
             'GET',
             [
                 'Accept' => 'application/json',
@@ -115,5 +119,14 @@ class Client
         );
 
         return json_decode($response->getBody()->getContents(), true);
+    }
+
+    protected function addFields(string $uri, array $fields = []): string
+    {
+        if (empty($fields)) {
+            return $uri;
+        }
+        $delimiter = (strstr($uri, '?') === false) ? '?' : '&';
+        return $uri . sprintf('%sfields=%s', $delimiter, implode(',', $fields));
     }
 }
