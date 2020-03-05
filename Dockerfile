@@ -1,4 +1,4 @@
-FROM php:7-cli
+FROM php:7.4-cli
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
 

@@ -41,7 +41,7 @@
     }
   },
   "scripts": {
-    "tests": "phpunit --coverage-clover build/logs/clover.xml --coverage-xml=build/logs/coverage-xml --log-junit=build/logs/phpunit.junit.xml",
+    "tests": "phpunit --log-junit=build/logs/phpunit.junit.xml",
     "phpstan": "phpstan analyse --no-progress --level=max src tests -c phpstan.neon",
     "phpcs": "phpcs --extensions=php src tests",
     "phpcbf": "phpcbf --extensions=php src tests",
