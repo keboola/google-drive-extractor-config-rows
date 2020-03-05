@@ -1,31 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GoogleDriveExtractor\Tests\GoogleDrive;
 
 use Keboola\Google\ClientBundle\Google\RestApi;
 use Keboola\GoogleDriveExtractor\GoogleDrive\Client;
 use Keboola\GoogleDriveExtractor\Tests\BaseTest;
 
-/**
- * Created by PhpStorm.
- * User: miroslavcillik
- * Date: 11/08/16
- * Time: 14:33
- */
 class ClientTest extends BaseTest
 {
     /** @var Client */
     private $client;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-        $api = new RestApi(getenv('CLIENT_ID'), getenv('CLIENT_SECRET'));
-        $api->setCredentials(getenv('ACCESS_TOKEN'), getenv('REFRESH_TOKEN'));
+        $api = new RestApi((string) getenv('CLIENT_ID'), (string) getenv('CLIENT_SECRET'));
+        $api->setCredentials((string) getenv('ACCESS_TOKEN'), (string) getenv('REFRESH_TOKEN'));
         $this->client = new Client($api);
     }
 
-    public function testGetFile()
+    public function testGetFile(): void
     {
         $file = $this->client->getFile($this->testFile['spreadsheetId']);
 
@@ -34,7 +30,7 @@ class ClientTest extends BaseTest
         $this->assertEquals($this->testFile['spreadsheetId'], $file['id']);
     }
 
-    public function testGetSpreadsheet()
+    public function testGetSpreadsheet(): void
     {
         $spreadsheet = $this->client->getSpreadsheet($this->testFile['spreadsheetId']);
 
@@ -43,7 +39,7 @@ class ClientTest extends BaseTest
         $this->assertArrayHasKey('sheets', $spreadsheet);
     }
 
-    public function testGetSpreadsheetValues()
+    public function testGetSpreadsheetValues(): void
     {
         $spreadsheetId = $this->testFile['spreadsheetId'];
         $sheetTitle = $this->testFile['sheets'][0]['properties']['title'];

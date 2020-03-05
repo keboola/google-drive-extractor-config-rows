@@ -16,7 +16,7 @@ services:
   tests:
     build: .
     image: keboola/google-drive-extractor
-    command: ./phpunit.sh
+    command: composer ci
     environment:
       CLIENT_ID: $CLIENT_ID
       CLIENT_SECRET: $CLIENT_SECRET

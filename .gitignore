@@ -1,10 +1,12 @@
 /build/
 /vendor/
 /data/
+/tests/data/out
 .idea/
+.DS_Store
+.env
+.phpunit.result.cache
 composer.phar
 tests.sh
 tokens.php
-/tests/data/out
 run.sh
-.DS_Store

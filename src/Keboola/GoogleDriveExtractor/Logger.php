@@ -1,22 +1,17 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: miroslavcillik
- * Date: 10/12/15
- * Time: 12:45
- */
+declare(strict_types=1);
 
 namespace Keboola\GoogleDriveExtractor;
 
-use Keboola\GoogleDriveExtractor\Logger\LineFormatter;
+use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 
 class Logger extends \Monolog\Logger
 {
-    public function __construct($name = '', $debug = false)
+    public function __construct(string $name = '', bool $debug = false)
     {
-        $options = getopt("", ['debug']);
+        $options = getopt('', ['debug']);
         if (isset($options['debug'])) {
             // Default format with all the info for dev debug
             $formatter = new LineFormatter();

@@ -8,7 +8,7 @@ use Symfony\Component\Yaml\Yaml;
 
 require_once(dirname(__FILE__) . "/bootstrap.php");
 
-$logger = new Logger(APP_NAME);
+$logger = new Logger('ex-google-drive');
 
 try {
     $arguments = getopt("d::", ["data::"]);

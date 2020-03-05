@@ -1,15 +1,11 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: miroslavcillik
- * Date: 10/08/16
- * Time: 15:45
- */
+declare(strict_types=1);
 
 namespace Keboola\GoogleDriveExtractor;
 
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7\Response;
 use Keboola\Google\ClientBundle\Google\RestApi;
 use Keboola\GoogleDriveExtractor\Configuration\ConfigDefinition;
 use Keboola\GoogleDriveExtractor\Exception\ApplicationException;
@@ -24,15 +20,16 @@ use Symfony\Component\Config\Definition\Processor;
 
 class Application
 {
+    /** @var Container */
     private $container;
 
-    public function __construct($config)
+    public function __construct(array $config)
     {
         $container = new Container();
         $container['action'] = isset($config['action'])?$config['action']:'run';
-        $container['parameters'] = $this->validateParamteters($config['parameters']);
+        $container['parameters'] = $this->validateParameters($config['parameters']);
         $container['logger'] = function ($c) {
-            $logger = new Logger(APP_NAME);
+            $logger = new Logger('ex-google-drive');
             if ($c['action'] !== 'run') {
                 $logger->setHandlers([new NullHandler(Logger::INFO)]);
             }
@@ -67,39 +64,48 @@ class Application
         $this->container = $container;
     }
 
-    public function run()
+    public function run(): array
     {
         $actionMethod = $this->container['action'] . 'Action';
         if (!method_exists($this, $actionMethod)) {
-            throw new UserException(sprintf("Action '%s' does not exist.", $this['action']));
+            throw new UserException(sprintf("Action '%s' does not exist.", $this->container['action']));
         }
 
         try {
             return $this->$actionMethod();
         } catch (RequestException $e) {
-            if ($e->getCode() == 401) {
-                throw new UserException("Expired or wrong credentials, please reauthorize.", $e->getCode(), $e);
+            /** @var Response $response */
+            $response = $e->getResponse();
+
+            if ($e->getCode() === 401) {
+                throw new UserException('Expired or wrong credentials, please reauthorize.', $e->getCode(), $e);
             }
-            if ($e->getCode() == 403) {
-                if (strtolower($e->getResponse()->getReasonPhrase()) == 'forbidden') {
+            if ($e->getCode() === 403) {
+                if (strtolower($response->getReasonPhrase()) === 'forbidden') {
                     $this->container['logger']->warning("You don't have access to Google Drive resource.");
                     return [];
                 }
-                throw new UserException("Reason: " . $e->getResponse()->getReasonPhrase(), $e->getCode(), $e);
+                throw new UserException('Reason: ' . $response->getReasonPhrase(), $e->getCode(), $e);
             }
-            if ($e->getCode() == 400) {
+            if ($e->getCode() === 400) {
                 throw new UserException($e->getMessage());
             }
-            if ($e->getCode() == 503) {
-                throw new UserException("Google API error: " . $e->getMessage(), $e->getCode(), $e);
+            if ($e->getCode() === 503) {
+                throw new UserException('Google API error: ' . $e->getMessage(), $e->getCode(), $e);
             }
-            throw new ApplicationException($e->getMessage(), 500, $e, [
-                'response' => $e->getResponse()->getBody()->getContents()
-            ]);
+            throw new ApplicationException(
+                $e->getMessage(),
+                500,
+                $e,
+                [
+                    'response' => $response->getBody()->getContents(),
+                ]
+            );
         }
     }
 
-    private function runAction()
+    // phpcs:disable SlevomatCodingStandard.Classes.UnusedPrivateElements.UnusedMethod
+    private function runAction(): array
     {
         /** @var Extractor $extractor */
         $extractor = $this->container['extractor'];
@@ -107,11 +113,11 @@ class Application
 
         return [
             'status' => 'ok',
-            'extracted' => $extracted
+            'extracted' => $extracted,
         ];
     }
 
-    private function validateParamteters($parameters)
+    private function validateParameters(array $parameters): array
     {
         try {
             $processor = new Processor();

@@ -6,7 +6,6 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          processIsolation="false"
-         syntaxCheck="false"
          bootstrap="bootstrap.php">
 
     <testsuite name="Google Drive Extractor Test Suite">

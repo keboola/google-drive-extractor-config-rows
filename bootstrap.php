@@ -1,18 +1,7 @@
 <?php
-/**
- * Created by Miroslav Čillík <miro@keboola.com>
- * Date: 22/09/15
- * Time: 15:22
- */
 
-define('APP_NAME', 'ex-google-drive');
-if (!defined('ROOT_PATH')) {
-    define('ROOT_PATH', __DIR__);
-}
+declare(strict_types=1);
 
-date_default_timezone_set('Europe/Prague');
-
-ini_set('display_errors', true);
 error_reporting(E_ALL);
 
 set_error_handler(
@@ -25,4 +14,4 @@ set_error_handler(
     }
 );
 
-require_once ROOT_PATH . '/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';

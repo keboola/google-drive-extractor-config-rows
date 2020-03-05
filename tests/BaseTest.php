@@ -1,59 +1,64 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: miroslavcillik
- * Date: 10/08/16
- * Time: 16:49
- */
+
+declare(strict_types=1);
 
 namespace Keboola\GoogleDriveExtractor\Tests;
 
 use Keboola\Google\ClientBundle\Google\RestApi;
 use Keboola\GoogleDriveExtractor\GoogleDrive\Client;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
 
-abstract class BaseTest extends \PHPUnit_Framework_TestCase
+abstract class BaseTest extends TestCase
 {
     /** @var Client */
     private $googleDriveApi;
 
-    protected $testFilePath = ROOT_PATH . '/tests/data/in/titanic.csv';
+    /** @var string */
+    protected $testFilePath = __DIR__ . '/data/in/titanic.csv';
 
+    /** @var string */
     protected $testFileName = 'titanic';
 
+    /** @var array */
     protected $testFile;
 
+    /** @var array */
     protected $config;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $this->googleDriveApi = new Client(new RestApi(
-            getenv('CLIENT_ID'),
-            getenv('CLIENT_SECRET'),
-            getenv('ACCESS_TOKEN'),
-            getenv('REFRESH_TOKEN')
-        ));
+        $this->googleDriveApi = new Client(
+            new RestApi(
+                (string) getenv('CLIENT_ID'),
+                (string) getenv('CLIENT_SECRET'),
+                (string) getenv('ACCESS_TOKEN'),
+                (string) getenv('REFRESH_TOKEN')
+            )
+        );
         $this->testFile = $this->prepareTestFile($this->testFilePath, $this->testFileName);
         $this->config = $this->makeConfig($this->testFile);
     }
 
-    protected function prepareTestFile($path, $name)
+    protected function prepareTestFile(string $path, string $name): array
     {
         $file = $this->googleDriveApi->createFile($path, $name);
         return $this->googleDriveApi->getSpreadsheet($file['id']);
     }
 
-    protected function makeConfig($testFile)
+    protected function makeConfig(array $testFile): array
     {
-        $config = Yaml::parse(file_get_contents(ROOT_PATH . '/tests/data/config.yml'));
-        $config['parameters']['data_dir'] = ROOT_PATH . '/tests/data';
+        $config = Yaml::parse((string) file_get_contents(__DIR__ . '/data/config.yml'));
+        $config['parameters']['data_dir'] = __DIR__ . '/data';
         $config['authorization']['oauth_api']['credentials'] = [
             'appKey' => getenv('CLIENT_ID'),
             '#appSecret' => getenv('CLIENT_SECRET'),
-            '#data' => json_encode([
+            '#data' => json_encode(
+                [
                 'access_token' => getenv('ACCESS_TOKEN'),
-                'refresh_token' => getenv('REFRESH_TOKEN')
-            ])
+                'refresh_token' => getenv('REFRESH_TOKEN'),
+                ]
+            ),
         ];
         $config['parameters']['sheets'][0] = [
             'id' => 0,
@@ -62,22 +67,22 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
             'sheetId' => $testFile['sheets'][0]['properties']['sheetId'],
             'sheetTitle' => $testFile['sheets'][0]['properties']['title'],
             'outputTable' => $this->testFileName,
-            'enabled' => true
+            'enabled' => true,
         ];
 
         return $config;
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         try {
             $this->googleDriveApi->deleteFile($this->testFile['id']);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
         }
     }
 
-    protected function getOutputFileName($fileId, $sheetId)
+    protected function getOutputFileName(string $fileId, int $sheetId): string
     {
-        return $fileId . '_' . $sheetId . '.csv';
+        return $fileId . '_' . (string) $sheetId . '.csv';
     }
 }

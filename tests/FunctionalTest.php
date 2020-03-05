@@ -1,10 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: miroslavcillik
- * Date: 10/08/16
- * Time: 16:45
- */
+
+declare(strict_types=1);
+
 namespace Keboola\GoogleDriveExtractor\Tests;
 
 use Symfony\Component\Filesystem\Filesystem;
@@ -13,9 +10,10 @@ use Symfony\Component\Yaml\Yaml;
 
 class FunctionalTest extends BaseTest
 {
+    /** @var string */
     private $dataPath = '/tmp/data-test';
 
-    public function testRun()
+    public function testRun(): void
     {
         $process = $this->runProcess();
         $this->assertEquals(0, $process->getExitCode(), $process->getErrorOutput());
@@ -23,17 +21,15 @@ class FunctionalTest extends BaseTest
         $fileId = $this->config['parameters']['sheets'][0]['fileId'];
         $sheetId = $this->config['parameters']['sheets'][0]['sheetId'];
 
-        $this->assertFileEquals(
+        $this->assertFileEqualsIgnoringCase(
             $this->testFilePath,
-            $this->dataPath . '/out/tables/' . $this->getOutputFileName($fileId, $sheetId),
-            "",
-            true
+            $this->dataPath . '/out/tables/' . $this->getOutputFileName($fileId, $sheetId)
         );
     }
 
-    public function testRunEmptyFile()
+    public function testRunEmptyFile(): void
     {
-        $emptyFilePath = ROOT_PATH . '/tests/data/in/empty.csv';
+        $emptyFilePath = __DIR__ . '/data/in/empty.csv';
         touch($emptyFilePath);
 
         $this->testFile = $this->prepareTestFile($emptyFilePath, 'empty');
@@ -52,9 +48,9 @@ class FunctionalTest extends BaseTest
         unlink($emptyFilePath);
     }
 
-    public function testSanitizeHeader()
+    public function testSanitizeHeader(): void
     {
-        $filePath = ROOT_PATH . '/tests/data/in/sanitize.csv';
+        $filePath = __DIR__ . '/data/in/sanitize.csv';
         touch($filePath);
         file_put_contents($filePath, '"Weird-[]./;-_*Chars", "Second column", "# poops per day"');
 
@@ -77,10 +73,10 @@ class FunctionalTest extends BaseTest
         unlink($filePath);
     }
 
-    public function testDoNotSanitizeHeader()
+    public function testDoNotSanitizeHeader(): void
     {
         $headerLine = '"Weird-[]./;-_*Chars","Second column","# poops per day"';
-        $filePath = ROOT_PATH . '/tests/data/in/not_sanitize.csv';
+        $filePath = __DIR__ . '/data/in/not_sanitize.csv';
         touch($filePath);
         file_put_contents($filePath, $headerLine);
 
@@ -106,10 +102,7 @@ class FunctionalTest extends BaseTest
         unlink($filePath);
     }
 
-    /**
-     * @return Process
-     */
-    private function runProcess()
+    private function runProcess(): Process
     {
         $fs = new Filesystem();
         $fs->remove($this->dataPath);

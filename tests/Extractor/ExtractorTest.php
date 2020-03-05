@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GoogleDriveExtractor\Tests\Extractor;
 
 use Keboola\Google\ClientBundle\Google\RestApi;
@@ -17,17 +19,17 @@ class ExtractorTest extends TestCase
     /** @var Extractor */
     private $extractor;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $api = new RestApi(getenv('CLIENT_ID'), getenv('CLIENT_SECRET'));
-        $api->setCredentials(getenv('ACCESS_TOKEN'), getenv('REFRESH_TOKEN'));
+        $api = new RestApi((string) getenv('CLIENT_ID'), (string) getenv('CLIENT_SECRET'));
+        $api->setCredentials((string) getenv('ACCESS_TOKEN'), (string) getenv('REFRESH_TOKEN'));
         $this->googleDriveClient = new Client($api);
         $output = new Output('/data', 'in.c-ex-google-drive');
         $logger = new Logger('tests');
         $this->extractor = new Extractor($this->googleDriveClient, $output, $logger);
     }
 
-    public function testColumnToLetter()
+    public function testColumnToLetter(): void
     {
         $notation = $this->extractor->columnToLetter(76);
         $this->assertEquals('BX', $notation);

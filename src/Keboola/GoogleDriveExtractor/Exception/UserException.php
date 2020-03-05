@@ -1,15 +1,9 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: miroslavcillik
- * Date: 10/12/15
- * Time: 12:45
- */
+declare(strict_types=1);
 
 namespace Keboola\GoogleDriveExtractor\Exception;
 
 class UserException extends ApplicationException
 {
-
 }
