@@ -15,9 +15,6 @@ class Client
 
     protected const SPREADSHEETS = 'https://sheets.googleapis.com/v4/spreadsheets/';
 
-    /** @var array */
-    protected $defaultFields = ['kind', 'id', 'name', 'mimeType', 'parents'];
-
     /** @var GoogleApi */
     protected $api;
 
@@ -127,7 +124,7 @@ class Client
     protected function addFields(string $uri, array $fields = []): string
     {
         if (empty($fields)) {
-            $fields = $this->defaultFields;
+            return $uri;
         }
         $delimiter = (strstr($uri, '?') === false) ? '?' : '&';
         return $uri . sprintf('%sfields=%s', $delimiter, implode(',', $fields));
