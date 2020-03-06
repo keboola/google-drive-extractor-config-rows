@@ -80,7 +80,7 @@ class Extractor
 
     private function export(array $spreadsheet, array $sheetCfg): void
     {
-        $sheet = $this->getSheetById($spreadsheet['sheets'], $sheetCfg['sheetId']);
+        $sheet = $this->getSheetById($spreadsheet['sheets'], (string) $sheetCfg['sheetId']);
         $rowCount = $sheet['properties']['gridProperties']['rowCount'];
         $columnCount = $sheet['properties']['gridProperties']['columnCount'];
         $offset = 1;
@@ -109,10 +109,10 @@ class Extractor
         }
     }
 
-    private function getSheetById(array $sheets, int $id): array
+    private function getSheetById(array $sheets, string $id): array
     {
         foreach ($sheets as $sheet) {
-            if ((int) $sheet['properties']['sheetId'] === $id) {
+            if ((string) $sheet['properties']['sheetId'] === $id) {
                 return $sheet;
             }
         }
