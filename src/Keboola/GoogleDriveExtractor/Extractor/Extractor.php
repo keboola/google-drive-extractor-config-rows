@@ -65,9 +65,13 @@ class Extractor
                 try {
                     $this->logger->info('Extracting sheet ' . $sheet['sheetTitle']);
                     $this->export($spreadsheet, $sheet);
+                } catch (UserException $e) {
+                    throw new UserException($e->getMessage(), 0, $e);
                 } catch (\Throwable $e) {
                     $exceptionHandler->handleExportException($e, $sheet);
                 }
+            } catch (UserException $e) {
+                throw new UserException($e->getMessage(), 0, $e);
             } catch (\Throwable $e) {
                 $exceptionHandler->handleGetSpreadsheetException($e, $sheet);
             }
