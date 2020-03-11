@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Keboola\GoogleDriveExtractor\Tests;
 
 use Keboola\GoogleDriveExtractor\Application;
+use Keboola\GoogleDriveExtractor\Exception\UserException;
 use Symfony\Component\Yaml\Yaml;
 
 class ApplicationTest extends BaseTest
@@ -43,5 +44,16 @@ class ApplicationTest extends BaseTest
         );
 
         $this->assertEquals($outputTableId, $manifest['destination']);
+    }
+
+    public function testInvalidSpreadsheetId(): void
+    {
+        $this->testFile['sheets'][0]['properties']['sheetId'] = 18293729;
+        $this->config = $this->makeConfig($this->testFile);
+        $this->application = new Application($this->config);
+
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessage('Sheet id "18293729" not found');
+        $this->application->run();
     }
 }
