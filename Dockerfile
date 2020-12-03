@@ -1,6 +1,7 @@
 FROM php:7.4-cli
 
-ENV COMPOSER_ALLOW_SUPERUSER 1
+ENV COMPOSER_ALLOW_SUPERUSER=1
+ARG COMPOSER_FLAGS="--prefer-dist --no-interaction"
 
 WORKDIR /code
 
@@ -11,7 +12,9 @@ RUN apt-get update && apt-get install -y \
 
 COPY ./docker/php/php.ini /usr/local/etc/php/php.ini
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer
+ADD https://getcomposer.org/installer composer-setup.php
+RUN php composer-setup.php --1 \
+  && mv composer.phar /usr/local/bin/composer
 
 COPY composer.* ./
 RUN composer install $COMPOSER_FLAGS --no-scripts --no-autoloader

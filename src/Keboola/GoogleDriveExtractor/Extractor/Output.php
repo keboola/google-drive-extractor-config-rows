@@ -56,9 +56,10 @@ class Output
         if ($this->header === null) {
             $headerRowNum = $this->sheetCfg['header']['rows'] - 1;
             $this->header = $data[$headerRowNum];
+            $headerLength = $this->getHeaderLength($data, (int) $headerRowNum);
+        } else {
+            $headerLength = count($this->header);
         }
-
-        $headerLength = count($this->header);
 
         foreach ($data as $k => $row) {
             // backward compatibility fix
@@ -93,5 +94,14 @@ class Output
             $col = Utility::sanitize($col);
         }
         return $header;
+    }
+
+    private function getHeaderLength(array $data, int $headerRowNum): int
+    {
+        $headerLength = 0;
+        for ($i = 0; $i <= $headerRowNum; $i++) {
+            $headerLength = max($headerLength, count($data[$i]));
+        }
+        return $headerLength;
     }
 }
