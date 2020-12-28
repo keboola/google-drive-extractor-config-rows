@@ -1,0 +1,19 @@
+{
+  "parameters": {
+    "outputBucket": "in.c-google-drive-extractor-testcfg1",
+    "sheets": [
+      {
+        "id": 0,
+        "fileId": null,
+        "fileTitle": null,
+        "sheetId": null,
+        "sheetTitle": null,
+        "outputTable": null,
+        "enabled": true,
+        "header": {
+          "rows": 1
+        }
+      }
+    ]
+  }
+}

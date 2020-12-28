@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Keboola\GoogleDriveExtractor\Extractor;
 
 use Keboola\Csv\CsvWriter;
-use Symfony\Component\Yaml\Yaml;
 
 class Output
 {
@@ -80,7 +79,7 @@ class Output
             'incremental' => false,
         ];
 
-        return (bool) file_put_contents($outFilename, Yaml::dump($manifestData));
+        return (bool) file_put_contents($outFilename, json_encode($manifestData));
     }
 
     protected function normalizeCsvHeader(array $header): array
