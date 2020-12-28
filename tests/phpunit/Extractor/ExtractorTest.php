@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Keboola\GoogleDriveExtractor\Tests\Extractor;
 
+use Keboola\Component\Logger;
 use Keboola\Google\ClientBundle\Google\RestApi;
 use Keboola\GoogleDriveExtractor\Extractor\Extractor;
 use Keboola\GoogleDriveExtractor\Extractor\Output;
 use Keboola\GoogleDriveExtractor\GoogleDrive\Client;
-use Keboola\GoogleDriveExtractor\Logger;
 use PHPUnit\Framework\TestCase;
 
 class ExtractorTest extends TestCase
@@ -22,9 +22,8 @@ class ExtractorTest extends TestCase
         $api = new RestApi((string) getenv('CLIENT_ID'), (string) getenv('CLIENT_SECRET'));
         $api->setCredentials((string) getenv('ACCESS_TOKEN'), (string) getenv('REFRESH_TOKEN'));
         $this->googleDriveClient = new Client($api);
-        $output = new Output('/data', 'in.c-ex-google-drive');
-        $logger = new Logger('tests');
-        $this->extractor = new Extractor($this->googleDriveClient, $output, $logger);
+        $output = new Output('/data');
+        $this->extractor = new Extractor($this->googleDriveClient, $output, new Logger());
     }
 
     public function testColumnToLetter(): void

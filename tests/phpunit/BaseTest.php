@@ -44,7 +44,6 @@ abstract class BaseTest extends TestCase
     protected function makeConfig(array $testFile): array
     {
         $config = json_decode((string) file_get_contents(__DIR__ . '/data/config.json'), true);
-        $config['parameters']['data_dir'] = __DIR__ . '/data';
         $config['authorization']['oauth_api']['credentials'] = [
             'appKey' => getenv('CLIENT_ID'),
             '#appSecret' => getenv('CLIENT_SECRET'),

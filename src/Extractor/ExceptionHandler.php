@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Keboola\GoogleDriveExtractor\Extractor;
 
 use GuzzleHttp\Exception\RequestException;
+use Keboola\Component\UserException;
 use Keboola\GoogleDriveExtractor\Exception\ApplicationException;
-use Keboola\GoogleDriveExtractor\Exception\UserException;
 
 class ExceptionHandler
 {
@@ -60,15 +60,7 @@ class ExceptionHandler
                 }
             }
 
-            $userException = new UserException('Google Drive Error: ' . $e->getMessage(), 400, $e);
-            $userException->setData(
-                [
-                'message' => $e->getMessage(),
-                'reason' => $e->getResponse()->getReasonPhrase(),
-                'sheet' => $sheet,
-                ]
-            );
-            throw $userException;
+            throw new UserException('Google Drive Error: ' . $e->getMessage(), 400, $e);
         }
         throw new ApplicationException(
             $e->getMessage(),
@@ -80,7 +72,7 @@ class ExceptionHandler
     public function handleExportException(\Throwable $e, array $sheet): void
     {
         if (($e instanceof RequestException) && ($e->getResponse() !== null)) {
-            $userException = new UserException(
+            throw new UserException(
                 sprintf(
                     "Error importing file - sheet: '%s - %s'",
                     $sheet['fileTitle'],
@@ -89,15 +81,6 @@ class ExceptionHandler
                 400,
                 $e
             );
-            $userException->setData(
-                array(
-                'message' => $e->getMessage(),
-                'reason'  => $e->getResponse()->getReasonPhrase(),
-                'body'    => substr($e->getResponse()->getBody()->getContents(), 0, 300),
-                'sheet'   => $sheet
-                )
-            );
-            throw $userException;
         }
         throw new ApplicationException(
             $e->getMessage(),

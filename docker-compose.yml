@@ -5,6 +5,7 @@ services:
     image: keboola/google-drive-extractor
     volumes:
       - .:/code
+      - ./data:/data
     working_dir: /code
     command: bash
     environment:

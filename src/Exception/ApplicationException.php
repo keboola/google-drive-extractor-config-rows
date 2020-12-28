@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Keboola\GoogleDriveExtractor\Exception;
 
-class ApplicationException extends \Exception
+use \Exception;
+use Keboola\CommonExceptions\ApplicationExceptionInterface;
+
+class ApplicationException extends Exception implements ApplicationExceptionInterface
 {
     protected array $data;
 

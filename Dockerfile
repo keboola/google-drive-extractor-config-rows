@@ -21,4 +21,4 @@ RUN composer install $COMPOSER_FLAGS --no-scripts --no-autoloader
 COPY . .
 RUN composer install $COMPOSER_FLAGS
 
-CMD php ./run.php --data=/data
+CMD php /code/src/run.php --data=/data

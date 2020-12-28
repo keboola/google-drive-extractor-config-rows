@@ -15,7 +15,7 @@ class FunctionalTest extends BaseTest
     public function testRun(): void
     {
         $process = $this->runProcess();
-        $this->assertEquals(0, $process->getExitCode(), $process->getErrorOutput());
+        $this->assertEquals(0, $process->getExitCode(), $process->getOutput().$process->getErrorOutput());
 
         $fileId = $this->config['parameters']['sheets'][0]['fileId'];
         $sheetId = $this->config['parameters']['sheets'][0]['sheetId'];
@@ -131,6 +131,21 @@ class FunctionalTest extends BaseTest
         );
     }
 
+    public function testInvalidSpreadsheetId(): void
+    {
+        $invalidSheetId = 18293729;
+        $this->testFile['sheets'][0]['properties']['sheetId'] = $invalidSheetId;
+        $this->config = $this->makeConfig($this->testFile);
+
+        $process = $this->runProcess();
+
+        $this->assertEquals(1, $process->getExitCode(), $process->getErrorOutput());
+        $this->assertStringContainsString(
+            sprintf('Sheet id "%d" not found', $invalidSheetId),
+            $process->getErrorOutput()
+        );
+    }
+
     private function runProcess(): Process
     {
         $fs = new Filesystem();
@@ -140,7 +155,8 @@ class FunctionalTest extends BaseTest
 
         file_put_contents($this->dataPath . '/config.json', json_encode($this->config));
 
-        $process = Process::fromShellCommandline(sprintf('php run.php --data=%s', $this->dataPath));
+        $process = Process::fromShellCommandline(sprintf('php src/run.php'));
+        $process->setEnv(['KBC_DATADIR' => $this->dataPath]);
         $process->run();
 
         return $process;

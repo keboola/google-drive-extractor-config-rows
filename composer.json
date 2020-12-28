@@ -10,6 +10,7 @@
     "guzzlehttp/guzzle": "^6.0",
     "keboola/csv": "^2.1",
     "keboola/google-client-bundle": "^5.1",
+    "keboola/php-component": "^8.1",
     "keboola/php-temp": "^2.0",
     "monolog/monolog": "^2.2",
     "pimple/pimple": "^3.3",
@@ -24,19 +25,23 @@
   },
   "autoload": {
     "psr-4": {
-      "Keboola\\": "src/Keboola/"
+      "Keboola\\GoogleDriveExtractor\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Keboola\\GoogleDriveExtractor\\Tests\\": "tests/"
+      "Keboola\\GoogleDriveExtractor\\Tests\\": "tests/phpunit/"
     }
   },
   "scripts": {
-    "tests": "phpunit --log-junit=build/logs/phpunit.junit.xml",
-    "phpstan": "phpstan analyse --no-progress --level=max src tests -c phpstan.neon",
-    "phpcs": "phpcs --extensions=php src tests",
-    "phpcbf": "phpcbf --extensions=php src tests",
+    "tests-phpunit": "phpunit",
+    "tests": [
+      "@tests-phpunit"
+    ],
+
+    "phpstan": "phpstan analyse ./src ./tests --level=max --no-progress -c phpstan.neon",
+    "phpcs": "phpcs -n --ignore=vendor --extensions=php .",
+    "phpcbf": "phpcbf -n --ignore=vendor --extensions=php .",
     "phplint": "parallel-lint -j 10 --exclude vendor .",
     "build": [
       "@phplint",
@@ -45,7 +50,7 @@
       "@tests"
     ],
     "ci": [
-      "@composer validate --no-check-all --strict",
+      "@composer validate --no-check-publish --no-check-all",
       "@build"
     ]
   },

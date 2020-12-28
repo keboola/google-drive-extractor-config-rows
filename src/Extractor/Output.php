@@ -10,18 +10,15 @@ class Output
 {
     private string $dataDir;
 
-    private string $outputBucket;
-
     private CsvWriter $csv;
 
     private ?array $header;
 
     private array $sheetCfg;
 
-    public function __construct(string $dataDir, string $outputBucket)
+    public function __construct(string $dataDir)
     {
         $this->dataDir = $dataDir;
-        $this->outputBucket = $outputBucket;
     }
 
     public function createCsv(array $sheet): string
@@ -75,7 +72,6 @@ class Output
         $outFilename = $filename . '.manifest';
 
         $manifestData = [
-            'destination' => $this->outputBucket . '.' . $outputTable,
             'incremental' => false,
         ];
 
