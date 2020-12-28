@@ -44,7 +44,7 @@ class Output
 
     public function write(array $data, int $offset): void
     {
-        if ($this->csv === null) {
+        if (!($this->csv instanceof CsvWriter)) {
             return;
         }
 
