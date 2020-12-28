@@ -10,8 +10,7 @@ use Symfony\Component\Yaml\Yaml;
 
 class ApplicationTest extends BaseTest
 {
-    /**@var Application */
-    private $application;
+    private Application $application;
 
     public function setUp(): void
     {

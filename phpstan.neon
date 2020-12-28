@@ -1,4 +1,5 @@
 parameters:
+    checkMissingIterableValueType: false
     excludes_analyse:
         - src/Keboola/GoogleDriveExtractor/Configuration/ConfigDefinition.php
     ignoreErrors:
