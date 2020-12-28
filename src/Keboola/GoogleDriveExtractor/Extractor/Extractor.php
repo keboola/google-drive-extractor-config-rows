@@ -11,14 +11,11 @@ use Psr\Http\Message\ResponseInterface;
 
 class Extractor
 {
-    /** @var Client */
-    private $driveApi;
+    private Client $driveApi;
 
-    /** @var Output */
-    private $output;
+    private Output $output;
 
-    /** @var Logger */
-    private $logger;
+    private Logger $logger;
 
     public function __construct(Client $driveApi, Output $output, Logger $logger)
     {

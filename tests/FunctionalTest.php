@@ -11,8 +11,7 @@ use Symfony\Component\Yaml\Yaml;
 
 class FunctionalTest extends BaseTest
 {
-    /** @var string */
-    private $dataPath = '/tmp/data-test';
+    private string $dataPath = '/tmp/data-test';
 
     public function testRun(): void
     {

@@ -10,8 +10,7 @@ use Keboola\GoogleDriveExtractor\Tests\BaseTest;
 
 class ClientTest extends BaseTest
 {
-    /** @var Client */
-    private $client;
+    private Client $client;
 
     public function setUp(): void
     {
