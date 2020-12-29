@@ -54,7 +54,7 @@ abstract class BaseTest extends TestCase
                 ]
             ),
         ];
-        $config['parameters']['sheets'][0] = [
+        $config['parameters'] = [
             'id' => 0,
             'fileId' => $testFile['spreadsheetId'],
             'fileTitle' => $testFile['properties']['title'],

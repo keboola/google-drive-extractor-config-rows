@@ -17,8 +17,8 @@ class FunctionalTest extends BaseTest
         $process = $this->runProcess();
         $this->assertEquals(0, $process->getExitCode(), $process->getOutput().$process->getErrorOutput());
 
-        $fileId = $this->config['parameters']['sheets'][0]['fileId'];
-        $sheetId = $this->config['parameters']['sheets'][0]['sheetId'];
+        $fileId = $this->config['parameters']['fileId'];
+        $sheetId = $this->config['parameters']['sheetId'];
 
         $this->assertFileEqualsIgnoringCase(
             $this->testFilePath,
@@ -37,8 +37,8 @@ class FunctionalTest extends BaseTest
         $process = $this->runProcess();
         $this->assertEquals(0, $process->getExitCode(), $process->getErrorOutput());
 
-        $fileId = $this->config['parameters']['sheets'][0]['fileId'];
-        $sheetId = $this->config['parameters']['sheets'][0]['sheetId'];
+        $fileId = $this->config['parameters']['fileId'];
+        $sheetId = $this->config['parameters']['sheetId'];
 
         $outputFilepath = $this->dataPath . '/out/tables/' . $this->getOutputFileName($fileId, $sheetId);
         $this->assertFileDoesNotExist($outputFilepath);
@@ -59,8 +59,8 @@ class FunctionalTest extends BaseTest
         $process = $this->runProcess();
         $this->assertEquals(0, $process->getExitCode(), $process->getErrorOutput());
 
-        $fileId = $this->config['parameters']['sheets'][0]['fileId'];
-        $sheetId = $this->config['parameters']['sheets'][0]['sheetId'];
+        $fileId = $this->config['parameters']['fileId'];
+        $sheetId = $this->config['parameters']['sheetId'];
 
         $this->assertEquals(
             '"Weird_Chars","Second_column","count_poops_per_day"' . PHP_EOL,
@@ -83,13 +83,13 @@ class FunctionalTest extends BaseTest
         $this->config = $this->makeConfig($this->testFile);
 
         // leave the header as is
-        $this->config['parameters']['sheets'][0]['header']['sanitize'] = false;
+        $this->config['parameters']['header']['sanitize'] = false;
 
         $process = $this->runProcess();
         $this->assertEquals(0, $process->getExitCode(), $process->getErrorOutput());
 
-        $fileId = $this->config['parameters']['sheets'][0]['fileId'];
-        $sheetId = $this->config['parameters']['sheets'][0]['sheetId'];
+        $fileId = $this->config['parameters']['fileId'];
+        $sheetId = $this->config['parameters']['sheetId'];
 
         $this->assertEquals(
             $headerLine . PHP_EOL,
@@ -117,13 +117,13 @@ class FunctionalTest extends BaseTest
         $this->config = $this->makeConfig($this->testFile);
 
         // leave the header as is
-        $this->config['parameters']['sheets'][0]['header']['rows'] = 2;
+        $this->config['parameters']['header']['rows'] = 2;
 
         $process = $this->runProcess();
         $this->assertEquals(0, $process->getExitCode(), $process->getErrorOutput());
 
-        $fileId = $this->config['parameters']['sheets'][0]['fileId'];
-        $sheetId = $this->config['parameters']['sheets'][0]['sheetId'];
+        $fileId = $this->config['parameters']['fileId'];
+        $sheetId = $this->config['parameters']['sheetId'];
 
         $this->assertFileEquals(
             __DIR__ . '/data/expectedFiles/multiple_header.csv',

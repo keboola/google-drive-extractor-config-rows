@@ -8,6 +8,8 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Keboola\Component\UserException;
+use Keboola\GoogleDriveExtractor\Configuration\Config;
+use Keboola\GoogleDriveExtractor\Configuration\ConfigDefinition;
 use Keboola\GoogleDriveExtractor\Exception\ApplicationException;
 use Keboola\GoogleDriveExtractor\Extractor\ExceptionHandler;
 use PHPUnit\Framework\TestCase;
@@ -22,7 +24,7 @@ class ExceptionHandleTest extends TestCase
         string $expectedExceptionClass,
         string $expectedExceptionMessage,
         \Throwable $caughtException,
-        array $sheet
+        Config $sheet
     ): void {
         $handler = new ExceptionHandler();
         $this->expectException($expectedExceptionClass);
@@ -42,15 +44,20 @@ class ExceptionHandleTest extends TestCase
                     new Request('whatever', 'git'),
                     new Response(400, [], '{ "error": "invalid_grant", "error_description": "Bad Request" }')
                 ),
-                [
-                    'id' => 2,
-                    'fileId' => '1y_XXXXXXXXXXX',
-                    'fileTitle' => 'File title',
-                    'sheetId' => 'SheetIdXxxxx',
-                    'sheetTitle' => 'Title XXXXXX',
-                    'outputTable' => 'table',
-                    'header' => ['rows' => 1, 'columns' => []],
-                ],
+                new Config(
+                    [
+                        'parameters' => [
+                            'id' => 2,
+                            'fileId' => '1y_XXXXXXXXXXX',
+                            'fileTitle' => 'File title',
+                            'sheetId' => 'SheetIdXxxxx',
+                            'sheetTitle' => 'Title XXXXXX',
+                            'outputTable' => 'table',
+                            'header' => ['rows' => 1, 'columns' => []],
+                        ],
+                    ],
+                    new ConfigDefinition()
+                ),
             ],
             'http404' => [
                 UserException::class,
@@ -61,15 +68,20 @@ class ExceptionHandleTest extends TestCase
                     new Request('whatever', 'git'),
                     new Response(404, [], '{}')
                 ),
-                [
-                    'id' => 2,
-                    'fileId' => '1y_XXXXXXXXXXX',
-                    'fileTitle' => 'FileIdXxxxxx',
-                    'sheetId' => 'SheetIdXxxxx',
-                    'sheetTitle' => 'Title XXXXXX',
-                    'outputTable' => 'table',
-                    'header' => ['rows' => 1, 'columns' => []],
-                ],
+                new Config(
+                    [
+                        'parameters' => [
+                            'id' => 2,
+                            'fileId' => '1y_XXXXXXXXXXX',
+                            'fileTitle' => 'FileIdXxxxxx',
+                            'sheetId' => 'SheetIdXxxxx',
+                            'sheetTitle' => 'Title XXXXXX',
+                            'outputTable' => 'table',
+                            'header' => ['rows' => 1, 'columns' => []],
+                        ],
+                    ],
+                    new ConfigDefinition()
+                ),
             ],
             'other request exception without description' => [
                 UserException::class,
@@ -80,15 +92,20 @@ class ExceptionHandleTest extends TestCase
                     new Request('whatever', 'git'),
                     new Response(403, [], '{}')
                 ),
-                [
-                    'id' => 2,
-                    'fileId' => '1y_XXXXXXXXXXX',
-                    'fileTitle' => 'FileIdXxxxxx',
-                    'sheetId' => 'SheetIdXxxxx',
-                    'sheetTitle' => 'Title XXXXXX',
-                    'outputTable' => 'table',
-                    'header' => ['rows' => 1, 'columns' => []],
-                ],
+                new Config(
+                    [
+                        'parameters' => [
+                            'id' => 2,
+                            'fileId' => '1y_XXXXXXXXXXX',
+                            'fileTitle' => 'FileIdXxxxxx',
+                            'sheetId' => 'SheetIdXxxxx',
+                            'sheetTitle' => 'Title XXXXXX',
+                            'outputTable' => 'table',
+                            'header' => ['rows' => 1, 'columns' => []],
+                        ],
+                    ],
+                    new ConfigDefinition()
+                ),
             ],
             'other request exception with description' => [
                 UserException::class,
@@ -100,15 +117,20 @@ class ExceptionHandleTest extends TestCase
                     // phpcs:disable Generic.Files.LineLength
                     new Response(403, [], '{ "error": "out_of_range", "error_description": "The column AX is not in the sheet" }')
                 ),
-                [
-                    'id' => 2,
-                    'fileId' => '1y_XXXXXXXXXXX',
-                    'fileTitle' => 'FileIdXxxxxx',
-                    'sheetId' => 'SheetIdXxxxx',
-                    'sheetTitle' => 'Title XXXXXX',
-                    'outputTable' => 'table',
-                    'header' => ['rows' => 1, 'columns' => []],
-                ],
+                new Config(
+                    [
+                        'parameters' => [
+                            'id' => 2,
+                            'fileId' => '1y_XXXXXXXXXXX',
+                            'fileTitle' => 'FileIdXxxxxx',
+                            'sheetId' => 'SheetIdXxxxx',
+                            'sheetTitle' => 'Title XXXXXX',
+                            'outputTable' => 'table',
+                            'header' => ['rows' => 1, 'columns' => []],
+                        ],
+                    ],
+                    new ConfigDefinition()
+                ),
             ],
             'other random exception' => [
                 ApplicationException::class,
@@ -116,15 +138,20 @@ class ExceptionHandleTest extends TestCase
                 new \Exception(
                     'Timeout'
                 ),
-                [
-                    'id' => 2,
-                    'fileId' => '1y_XXXXXXXXXXX',
-                    'fileTitle' => 'FileIdXxxxxx',
-                    'sheetId' => 'SheetIdXxxxx',
-                    'sheetTitle' => 'Title XXXXXX',
-                    'outputTable' => 'table',
-                    'header' => ['rows' => 1, 'columns' => []],
-                ],
+                new Config(
+                    [
+                        'parameters' => [
+                            'id' => 2,
+                            'fileId' => '1y_XXXXXXXXXXX',
+                            'fileTitle' => 'FileIdXxxxxx',
+                            'sheetId' => 'SheetIdXxxxx',
+                            'sheetTitle' => 'Title XXXXXX',
+                            'outputTable' => 'table',
+                            'header' => ['rows' => 1, 'columns' => []],
+                        ],
+                    ],
+                    new ConfigDefinition()
+                ),
             ],
             'exception with another response array ' => [
                 UserException::class,
@@ -137,15 +164,20 @@ class ExceptionHandleTest extends TestCase
                     // phpcs:disable Generic.Files.LineLength
                     new Response(400, [], '{ "error": { "code": 403, "message": "The caller does not have permission", "status": "PERMISSION_DENIED" } }')
                 ),
-                [
-                    'id' => 2,
-                    'fileId' => '1y_XXXXXXXXXXX',
-                    'fileTitle' => 'File title',
-                    'sheetId' => 'SheetIdXxxxx',
-                    'sheetTitle' => 'Title XXXXXX',
-                    'outputTable' => 'table',
-                    'header' => ['rows' => 1, 'columns' => []],
-                ],
+                new Config(
+                    [
+                        'parameters' => [
+                            'id' => 2,
+                            'fileId' => '1y_XXXXXXXXXXX',
+                            'fileTitle' => 'File title',
+                            'sheetId' => 'SheetIdXxxxx',
+                            'sheetTitle' => 'Title XXXXXX',
+                            'outputTable' => 'table',
+                            'header' => ['rows' => 1, 'columns' => []],
+                        ],
+                    ],
+                    new ConfigDefinition()
+                ),
             ],
         ];
     }
@@ -158,7 +190,7 @@ class ExceptionHandleTest extends TestCase
         string $expectedExceptionClass,
         string $expectedExceptionMessage,
         \Throwable $caughtException,
-        array $sheet
+        Config $sheet
     ): void {
         $handler = new ExceptionHandler();
         $this->expectException($expectedExceptionClass);
@@ -178,15 +210,20 @@ class ExceptionHandleTest extends TestCase
                     // phpcs:disable Generic.Files.LineLength
                     new Response(429, [], '{"error": {"errors": [{"domain": "usageLimits","reason": "rateLimitExceeded","message": "Rate Limit Exceeded"}],"code": 429,"message": "Rate Limit Exceeded"}}')
                 ),
-                [
-                    'id' => 2,
-                    'fileId' => '1y_XXXXXXXXXXX',
-                    'fileTitle' => 'FileIdXxxxxx',
-                    'sheetId' => 'SheetIdXxxxx',
-                    'sheetTitle' => 'Title XXXXXX',
-                    'outputTable' => 'table',
-                    'header' => ['rows' => 1, 'columns' => []],
-                ],
+                new Config(
+                    [
+                        'parameters' => [
+                            'id' => 2,
+                            'fileId' => '1y_XXXXXXXXXXX',
+                            'fileTitle' => 'FileIdXxxxxx',
+                            'sheetId' => 'SheetIdXxxxx',
+                            'sheetTitle' => 'Title XXXXXX',
+                            'outputTable' => 'table',
+                            'header' => ['rows' => 1, 'columns' => []],
+                        ],
+                    ],
+                    new ConfigDefinition()
+                ),
             ],
         ];
     }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Keboola\GoogleDriveExtractor\Extractor;
 
 use Keboola\Component\UserException;
+use Keboola\GoogleDriveExtractor\Configuration\Config;
 use Keboola\GoogleDriveExtractor\GoogleDrive\Client;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -45,39 +46,37 @@ class Extractor
         };
     }
 
-    public function run(array $sheets): array
+    public function run(Config $config): array
     {
         $status = [];
         $exceptionHandler = new ExceptionHandler();
 
-        foreach ($sheets as $sheet) {
-            try {
-                $spreadsheet = $this->driveApi->getSpreadsheet($sheet['fileId']);
-                $this->logger->info('Obtained spreadsheet metadata');
+        try {
+            $spreadsheet = $this->driveApi->getSpreadsheet($config->getFileId());
+            $this->logger->info('Obtained spreadsheet metadata');
 
-                try {
-                    $this->logger->info('Extracting sheet ' . $sheet['sheetTitle']);
-                    $this->export($spreadsheet, $sheet);
-                } catch (UserException $e) {
-                    throw new UserException($e->getMessage(), 0, $e);
-                } catch (\Throwable $e) {
-                    $exceptionHandler->handleExportException($e, $sheet);
-                }
+            try {
+                $this->logger->info('Extracting sheet ' . $config->getSheetTitle());
+                $this->export($spreadsheet, $config);
             } catch (UserException $e) {
                 throw new UserException($e->getMessage(), 0, $e);
             } catch (\Throwable $e) {
-                $exceptionHandler->handleGetSpreadsheetException($e, $sheet);
+                $exceptionHandler->handleExportException($e, $config);
             }
-
-            $status[$sheet['fileTitle']][$sheet['sheetTitle']] = 'success';
+        } catch (UserException $e) {
+            throw new UserException($e->getMessage(), 0, $e);
+        } catch (\Throwable $e) {
+            $exceptionHandler->handleGetSpreadsheetException($e, $config);
         }
+
+        $status[$config->getFileTitle()][$config->getSheetTitle()] = 'success';
 
         return $status;
     }
 
-    private function export(array $spreadsheet, array $sheetCfg): void
+    private function export(array $spreadsheet, Config $config): void
     {
-        $sheet = $this->getSheetById($spreadsheet['sheets'], (string) $sheetCfg['sheetId']);
+        $sheet = $this->getSheetById($spreadsheet['sheets'], (string) $config->getSheetId());
         $rowCount = $sheet['properties']['gridProperties']['rowCount'];
         $columnCount = $sheet['properties']['gridProperties']['columnCount'];
         $offset = 1;
@@ -95,8 +94,8 @@ class Extractor
             if (!empty($response['values'])) {
                 if ($offset === 1) {
                     // it is a first run
-                    $csvFilename = $this->output->createCsv($sheetCfg);
-                    $this->output->createManifest($csvFilename, $sheetCfg['outputTable']);
+                    $csvFilename = $this->output->createCsv();
+                    $this->output->createManifest($csvFilename);
                 }
 
                 $this->output->write($response['values'], $offset);
