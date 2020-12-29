@@ -8,7 +8,6 @@
         "sheetId": null,
         "sheetTitle": null,
         "outputTable": null,
-        "enabled": true,
         "header": {
           "rows": 1
         }

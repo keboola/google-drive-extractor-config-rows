@@ -50,7 +50,6 @@ class ExceptionHandleTest extends TestCase
                     'sheetTitle' => 'Title XXXXXX',
                     'outputTable' => 'table',
                     'header' => ['rows' => 1, 'columns' => []],
-                    'enabled' => true,
                 ],
             ],
             'http404' => [
@@ -70,7 +69,6 @@ class ExceptionHandleTest extends TestCase
                     'sheetTitle' => 'Title XXXXXX',
                     'outputTable' => 'table',
                     'header' => ['rows' => 1, 'columns' => []],
-                    'enabled' => true,
                 ],
             ],
             'other request exception without description' => [
@@ -90,7 +88,6 @@ class ExceptionHandleTest extends TestCase
                     'sheetTitle' => 'Title XXXXXX',
                     'outputTable' => 'table',
                     'header' => ['rows' => 1, 'columns' => []],
-                    'enabled' => true,
                 ],
             ],
             'other request exception with description' => [
@@ -111,7 +108,6 @@ class ExceptionHandleTest extends TestCase
                     'sheetTitle' => 'Title XXXXXX',
                     'outputTable' => 'table',
                     'header' => ['rows' => 1, 'columns' => []],
-                    'enabled' => true,
                 ],
             ],
             'other random exception' => [
@@ -128,7 +124,6 @@ class ExceptionHandleTest extends TestCase
                     'sheetTitle' => 'Title XXXXXX',
                     'outputTable' => 'table',
                     'header' => ['rows' => 1, 'columns' => []],
-                    'enabled' => true,
                 ],
             ],
             'exception with another response array ' => [
@@ -150,7 +145,6 @@ class ExceptionHandleTest extends TestCase
                     'sheetTitle' => 'Title XXXXXX',
                     'outputTable' => 'table',
                     'header' => ['rows' => 1, 'columns' => []],
-                    'enabled' => true,
                 ],
             ],
         ];
@@ -192,7 +186,6 @@ class ExceptionHandleTest extends TestCase
                     'sheetTitle' => 'Title XXXXXX',
                     'outputTable' => 'table',
                     'header' => ['rows' => 1, 'columns' => []],
-                    'enabled' => true,
                 ],
             ],
         ];

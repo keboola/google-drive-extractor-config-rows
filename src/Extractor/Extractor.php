@@ -51,10 +51,6 @@ class Extractor
         $exceptionHandler = new ExceptionHandler();
 
         foreach ($sheets as $sheet) {
-            if (!$sheet['enabled']) {
-                continue;
-            }
-
             try {
                 $spreadsheet = $this->driveApi->getSpreadsheet($sheet['fileId']);
                 $this->logger->info('Obtained spreadsheet metadata');
