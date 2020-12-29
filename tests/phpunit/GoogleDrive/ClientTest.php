@@ -6,18 +6,32 @@ namespace Keboola\GoogleDriveExtractor\Tests\GoogleDrive;
 
 use Keboola\Google\ClientBundle\Google\RestApi;
 use Keboola\GoogleDriveExtractor\GoogleDrive\Client;
-use Keboola\GoogleDriveExtractor\Tests\BaseTest;
+use Keboola\Temp\Temp;
+use PHPUnit\Framework\TestCase;
 
-class ClientTest extends BaseTest
+class ClientTest extends TestCase
 {
     private Client $client;
 
+    private string $testFileName = 'titanic';
+
+    private array $testFile;
+
     public function setUp(): void
     {
-        parent::setUp();
-        $api = new RestApi((string) getenv('CLIENT_ID'), (string) getenv('CLIENT_SECRET'));
-        $api->setCredentials((string) getenv('ACCESS_TOKEN'), (string) getenv('REFRESH_TOKEN'));
+        $api = new RestApi(
+            (string) getenv('CLIENT_ID'),
+            (string) getenv('CLIENT_SECRET')
+        );
+
+        $api->setCredentials(
+            (string) getenv('ACCESS_TOKEN'),
+            (string) getenv('REFRESH_TOKEN')
+        );
+
         $this->client = new Client($api);
+
+        $this->testFile = $this->prepareTestFile($this->testFileName);
     }
 
     public function testGetFile(): void
@@ -54,5 +68,16 @@ class ClientTest extends BaseTest
         $this->assertEquals('Age', $header[3]);
         $this->assertEquals('Survived', $header[4]);
         $this->assertEquals('Freq', $header[5]);
+    }
+
+    private function prepareTestFile(string $name): array
+    {
+        $tmpFile = new Temp();
+        $tmpFile->createFile($name);
+        $filename = sprintf('%s/%s.csv', $tmpFile->getTmpFolder(), $name);
+        file_put_contents($filename, '"Id","Class","Sex","Age","Survived","Freq"');
+
+        $file = $this->client->createFile($filename, $name);
+        return $this->client->getSpreadsheet($file['id']);
     }
 }

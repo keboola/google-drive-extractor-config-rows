@@ -47,7 +47,6 @@ class ExceptionHandleTest extends TestCase
                 new Config(
                     [
                         'parameters' => [
-                            'id' => 2,
                             'fileId' => '1y_XXXXXXXXXXX',
                             'fileTitle' => 'File title',
                             'sheetId' => 'SheetIdXxxxx',
@@ -71,7 +70,6 @@ class ExceptionHandleTest extends TestCase
                 new Config(
                     [
                         'parameters' => [
-                            'id' => 2,
                             'fileId' => '1y_XXXXXXXXXXX',
                             'fileTitle' => 'FileIdXxxxxx',
                             'sheetId' => 'SheetIdXxxxx',
@@ -95,7 +93,6 @@ class ExceptionHandleTest extends TestCase
                 new Config(
                     [
                         'parameters' => [
-                            'id' => 2,
                             'fileId' => '1y_XXXXXXXXXXX',
                             'fileTitle' => 'FileIdXxxxxx',
                             'sheetId' => 'SheetIdXxxxx',
@@ -120,7 +117,6 @@ class ExceptionHandleTest extends TestCase
                 new Config(
                     [
                         'parameters' => [
-                            'id' => 2,
                             'fileId' => '1y_XXXXXXXXXXX',
                             'fileTitle' => 'FileIdXxxxxx',
                             'sheetId' => 'SheetIdXxxxx',
@@ -141,7 +137,6 @@ class ExceptionHandleTest extends TestCase
                 new Config(
                     [
                         'parameters' => [
-                            'id' => 2,
                             'fileId' => '1y_XXXXXXXXXXX',
                             'fileTitle' => 'FileIdXxxxxx',
                             'sheetId' => 'SheetIdXxxxx',
@@ -167,7 +162,6 @@ class ExceptionHandleTest extends TestCase
                 new Config(
                     [
                         'parameters' => [
-                            'id' => 2,
                             'fileId' => '1y_XXXXXXXXXXX',
                             'fileTitle' => 'File title',
                             'sheetId' => 'SheetIdXxxxx',
@@ -213,7 +207,6 @@ class ExceptionHandleTest extends TestCase
                 new Config(
                     [
                         'parameters' => [
-                            'id' => 2,
                             'fileId' => '1y_XXXXXXXXXXX',
                             'fileTitle' => 'FileIdXxxxxx',
                             'sheetId' => 'SheetIdXxxxx',

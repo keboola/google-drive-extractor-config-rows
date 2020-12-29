@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "767db3ad319fddc441407f1aefa16088",
+    "content-hash": "174a9764cae8a87477d0fa1fd8c29b49",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -1660,6 +1660,51 @@
             ],
             "description": "Keboola coding standard",
             "time": "2019-10-16T11:14:48+00:00"
+        },
+        {
+            "name": "keboola/datadir-tests",
+            "version": "5.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/keboola/datadir-tests.git",
+                "reference": "be02e9dc7869c4224cff6dd1b0cdc7937753b234"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/keboola/datadir-tests/zipball/be02e9dc7869c4224cff6dd1b0cdc7937753b234",
+                "reference": "be02e9dc7869c4224cff6dd1b0cdc7937753b234",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "keboola/php-temp": "^2.0",
+                "php": "^7.3",
+                "phpunit/phpunit": "^9.0",
+                "symfony/filesystem": "^5.0",
+                "symfony/finder": "^5.0",
+                "symfony/process": "^5.0"
+            },
+            "require-dev": {
+                "jakub-onderka/php-parallel-lint": "^1.0",
+                "keboola/coding-standard": "^9.0",
+                "phpstan/phpstan": "^0.12.14"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Keboola\\DatadirTests\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Tool for functional testing of Keboola Connection components",
+            "support": {
+                "issues": "https://github.com/keboola/datadir-tests/issues",
+                "source": "https://github.com/keboola/datadir-tests/tree/5.2.1"
+            },
+            "time": "2020-11-30T19:23:38+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -3681,5 +3726,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.0.0"
 }

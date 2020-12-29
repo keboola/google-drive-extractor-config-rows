@@ -1,0 +1,12 @@
+{
+  "parameters": {
+    "fileId": null,
+    "fileTitle": null,
+    "sheetId": null,
+    "sheetTitle": null,
+    "header": {
+      "rows": 2
+    },
+    "outputTable": "multiple_header"
+  }
+}
