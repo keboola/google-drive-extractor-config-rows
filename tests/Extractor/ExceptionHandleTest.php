@@ -14,7 +14,10 @@ use PHPUnit\Framework\TestCase;
 
 class ExceptionHandleTest extends TestCase
 {
-    /** @dataProvider provideExceptionsForGetSpreadsheet */
+    /**
+     * @psalm-param class-string<\Throwable> $expectedExceptionClass
+     * @dataProvider provideExceptionsForGetSpreadsheet
+     */
     public function testHandlingOfExceptions(
         string $expectedExceptionClass,
         string $expectedExceptionMessage,
@@ -153,7 +156,10 @@ class ExceptionHandleTest extends TestCase
         ];
     }
 
-    /** @dataProvider provideExceptionsForExport */
+    /**
+     * @psalm-param class-string<\Throwable> $expectedExceptionClass
+     * @dataProvider provideExceptionsForExport
+     */
     public function testExportExceptionHandling(
         string $expectedExceptionClass,
         string $expectedExceptionMessage,

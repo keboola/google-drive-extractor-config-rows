@@ -13,11 +13,9 @@ use PHPUnit\Framework\TestCase;
 
 class ExtractorTest extends TestCase
 {
-    /** @var Client */
-    private $googleDriveClient;
+    private Client $googleDriveClient;
 
-    /** @var Extractor */
-    private $extractor;
+    private Extractor $extractor;
 
     public function setUp(): void
     {

@@ -20,8 +20,7 @@ use Symfony\Component\Config\Definition\Processor;
 
 class Application
 {
-    /** @var Container */
-    private $container;
+    private Container $container;
 
     public function __construct(array $config)
     {

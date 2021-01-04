@@ -15,8 +15,7 @@ class Client
 
     protected const SPREADSHEETS = 'https://sheets.googleapis.com/v4/spreadsheets/';
 
-    /** @var GoogleApi */
-    protected $api;
+    protected GoogleApi $api;
 
     public function __construct(GoogleApi $api)
     {

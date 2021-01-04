@@ -11,20 +11,15 @@ use Symfony\Component\Yaml\Yaml;
 
 abstract class BaseTest extends TestCase
 {
-    /** @var Client */
-    private $googleDriveApi;
+    private Client $googleDriveApi;
 
-    /** @var string */
-    protected $testFilePath = __DIR__ . '/data/in/titanic.csv';
+    protected string $testFilePath = __DIR__ . '/data/in/titanic.csv';
 
-    /** @var string */
-    protected $testFileName = 'titanic';
+    protected string $testFileName = 'titanic';
 
-    /** @var array */
-    protected $testFile;
+    protected array $testFile;
 
-    /** @var array */
-    protected $config;
+    protected array $config;
 
     public function setUp(): void
     {

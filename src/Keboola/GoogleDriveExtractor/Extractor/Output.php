@@ -9,20 +9,15 @@ use Symfony\Component\Yaml\Yaml;
 
 class Output
 {
-    /** @var string */
-    private $dataDir;
+    private string $dataDir;
 
-    /** @var string */
-    private $outputBucket;
+    private string $outputBucket;
 
-    /** @var CsvWriter */
-    private $csv;
+    private CsvWriter $csv;
 
-    /** @var array|null */
-    private $header;
+    private ?array $header;
 
-    /** @var array */
-    private $sheetCfg;
+    private array $sheetCfg;
 
     public function __construct(string $dataDir, string $outputBucket)
     {
@@ -49,7 +44,7 @@ class Output
 
     public function write(array $data, int $offset): void
     {
-        if ($this->csv === null) {
+        if (!($this->csv instanceof CsvWriter)) {
             return;
         }
 

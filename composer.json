@@ -4,31 +4,24 @@
   "type": "project",
   "description": "Keboola Google Drive Extractor",
   "keywords": ["keboola", "google", "drive", "spreadsheets", "extractor"],
-  "authors": [
-    {
-      "name": "Miroslav Čillík",
-      "email": "miro@keboola.com"
-    }
-  ],
   "require": {
-    "php": "^7.3",
+    "php": "^7.4",
     "ext-json": "*",
+    "guzzlehttp/guzzle": "^6.0",
     "keboola/csv": "^2.1",
-    "pimple/pimple": "^3.0",
-    "monolog/monolog": "^1.25",
-    "symfony/config": "^3.0",
-    "symfony/yaml": "^3.0",
-    "symfony/process": "^3.0",
-    "guzzlehttp/guzzle": "^6.2",
+    "keboola/google-client-bundle": "^5.1",
     "keboola/php-temp": "^2.0",
-    "keboola/google-client-bundle": "^5.0"
+    "monolog/monolog": "^2.2",
+    "pimple/pimple": "^3.3",
+    "symfony/config": "^5.2",
+    "symfony/process": "^5.2",
+    "symfony/yaml": "^5.2"
   },
   "require-dev": {
-    "jakub-onderka/php-parallel-lint": "^1.0",
-    "infection/infection": "^0.14",
-    "phpstan/phpstan-shim": "^0.11",
-    "phpunit/phpunit": "^8.0",
-    "keboola/coding-standard": ">=7.0.2"
+    "keboola/coding-standard": ">=7.0.2",
+    "php-parallel-lint/php-parallel-lint": "^1.2",
+    "phpstan/phpstan": "^0.12.64",
+    "phpunit/phpunit": "^9.5"
   },
   "autoload": {
     "psr-4": {

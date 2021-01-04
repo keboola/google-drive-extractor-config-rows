@@ -6,8 +6,7 @@ namespace Keboola\GoogleDriveExtractor\Exception;
 
 class ApplicationException extends \Exception
 {
-    /** @var array */
-    protected $data;
+    protected array $data;
 
     public function __construct(string $message = '', int $code = 0, ?\Throwable $previous = null, ?array $data = [])
     {

@@ -11,8 +11,7 @@ use Symfony\Component\Yaml\Yaml;
 
 class FunctionalTest extends BaseTest
 {
-    /** @var string */
-    private $dataPath = '/tmp/data-test';
+    private string $dataPath = '/tmp/data-test';
 
     public function testRun(): void
     {
@@ -43,8 +42,8 @@ class FunctionalTest extends BaseTest
         $sheetId = $this->config['parameters']['sheets'][0]['sheetId'];
 
         $outputFilepath = $this->dataPath . '/out/tables/' . $this->getOutputFileName($fileId, $sheetId);
-        $this->assertFileNotExists($outputFilepath);
-        $this->assertFileNotExists($outputFilepath . '.manifest');
+        $this->assertFileDoesNotExist($outputFilepath);
+        $this->assertFileDoesNotExist($outputFilepath . '.manifest');
 
         unlink($emptyFilePath);
     }
@@ -143,7 +142,7 @@ class FunctionalTest extends BaseTest
         $yaml = new Yaml();
         file_put_contents($this->dataPath . '/config.yml', $yaml->dump($this->config));
 
-        $process = new Process(sprintf('php run.php --data=%s', $this->dataPath));
+        $process = Process::fromShellCommandline(sprintf('php run.php --data=%s', $this->dataPath));
         $process->run();
 
         return $process;
