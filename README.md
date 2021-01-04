@@ -10,18 +10,16 @@ Extract data from Goole Drive files and spreadsheets.
 
 ## Example configuration
 
-```yaml
-parameters:
-  outputBucket: "in.c-google-drive-extractor-testcfg1"
-  sheets:
-    -
-      id: 0
-      fileId: FILE_ID
-      fileTitle: FILE_TITLE
-      sheetId: THE_GID_OF_THE_SHEET
-      sheetTitle: SHEET_TITLE
-      outputTable: FILE_TITLE
-      enabled: true
+```json
+{
+   "parameters": {
+      "fileId": "FILE_ID",
+      "fileTitle": "FILE_TITLE",
+      "sheetId": "THE_GID_OF_THE_SHEET",
+      "sheetTitle": "SHEET_TITLE",
+      "outputTable": "FILE_TITLE"
+   }
+}
 ```
 
 ## OAuth Registration
