@@ -6,7 +6,6 @@ namespace Keboola\GoogleDriveExtractor\Tests;
 
 use Keboola\GoogleDriveExtractor\Application;
 use Keboola\GoogleDriveExtractor\Exception\UserException;
-use Symfony\Component\Yaml\Yaml;
 
 class ApplicationTest extends BaseTest
 {
@@ -30,7 +29,7 @@ class ApplicationTest extends BaseTest
         );
 
         $manifestPath = $outputPath . '.manifest';
-        $manifest = Yaml::parse((string) file_get_contents($manifestPath));
+        $manifest = json_decode((string) file_get_contents($manifestPath), true);
 
         $this->assertArrayHasKey('destination', $manifest);
         $this->assertArrayHasKey('incremental', $manifest);

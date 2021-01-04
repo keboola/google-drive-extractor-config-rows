@@ -7,7 +7,6 @@ namespace Keboola\GoogleDriveExtractor\Tests;
 use Keboola\Csv\CsvWriter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
-use Symfony\Component\Yaml\Yaml;
 
 class FunctionalTest extends BaseTest
 {
@@ -139,8 +138,7 @@ class FunctionalTest extends BaseTest
         $fs->mkdir($this->dataPath);
         $fs->mkdir($this->dataPath . '/out/tables');
 
-        $yaml = new Yaml();
-        file_put_contents($this->dataPath . '/config.yml', $yaml->dump($this->config));
+        file_put_contents($this->dataPath . '/config.json', json_encode($this->config));
 
         $process = Process::fromShellCommandline(sprintf('php run.php --data=%s', $this->dataPath));
         $process->run();

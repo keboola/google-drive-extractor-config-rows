@@ -14,8 +14,7 @@
     "monolog/monolog": "^2.2",
     "pimple/pimple": "^3.3",
     "symfony/config": "^5.2",
-    "symfony/process": "^5.2",
-    "symfony/yaml": "^5.2"
+    "symfony/process": "^5.2"
   },
   "require-dev": {
     "keboola/coding-standard": ">=7.0.2",

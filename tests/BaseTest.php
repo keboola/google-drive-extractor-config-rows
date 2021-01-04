@@ -7,7 +7,7 @@ namespace Keboola\GoogleDriveExtractor\Tests;
 use Keboola\Google\ClientBundle\Google\RestApi;
 use Keboola\GoogleDriveExtractor\GoogleDrive\Client;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Yaml\Yaml;
+use \Throwable;
 
 abstract class BaseTest extends TestCase
 {
@@ -43,7 +43,7 @@ abstract class BaseTest extends TestCase
 
     protected function makeConfig(array $testFile): array
     {
-        $config = Yaml::parse((string) file_get_contents(__DIR__ . '/data/config.yml'));
+        $config = json_decode((string) file_get_contents(__DIR__ . '/data/config.json'), true);
         $config['parameters']['data_dir'] = __DIR__ . '/data';
         $config['authorization']['oauth_api']['credentials'] = [
             'appKey' => getenv('CLIENT_ID'),
@@ -72,7 +72,7 @@ abstract class BaseTest extends TestCase
     {
         try {
             $this->googleDriveApi->deleteFile($this->testFile['id']);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
     }
 
