@@ -1,18 +1,13 @@
 {
   "parameters": {
-    "sheets": [
-      {
-        "id": 0,
-        "fileId": null,
-        "fileTitle": null,
-        "sheetId": null,
-        "sheetTitle": null,
-        "outputTable": null,
-        "enabled": true,
-        "header": {
-          "rows": 1
-        }
-      }
-    ]
+    "id": 0,
+    "fileId": null,
+    "fileTitle": null,
+    "sheetId": null,
+    "sheetTitle": null,
+    "outputTable": null,
+    "header": {
+      "rows": 1
+    }
   }
 }

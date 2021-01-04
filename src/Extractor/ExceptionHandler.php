@@ -6,15 +6,20 @@ namespace Keboola\GoogleDriveExtractor\Extractor;
 
 use GuzzleHttp\Exception\RequestException;
 use Keboola\Component\UserException;
+use Keboola\GoogleDriveExtractor\Configuration\Config;
 use Keboola\GoogleDriveExtractor\Exception\ApplicationException;
 
 class ExceptionHandler
 {
-    public function handleGetSpreadsheetException(\Throwable $e, array $sheet): void
+    public function handleGetSpreadsheetException(\Throwable $e, Config $config): void
     {
         if (($e instanceof RequestException) && ($e->getResponse() !== null)) {
             if ($e->getResponse()->getStatusCode() === 404) {
-                throw new UserException(sprintf('File "%s" not found in Google Drive', $sheet['sheetTitle']), 404, $e);
+                throw new UserException(
+                    sprintf('File "%s" not found in Google Drive', $config->getSheetTitle()),
+                    404,
+                    $e
+                );
             }
 
             $errorSpec = json_decode((string) $e->getResponse()->getBody()->getContents(), true);
@@ -24,7 +29,7 @@ class ExceptionHandler
                     throw new UserException(
                         sprintf(
                             'Invalid OAuth grant when fetching "%s", try reauthenticating the extractor',
-                            $sheet['fileTitle']
+                            $config->getFileTitle()
                         ),
                         0,
                         $e
@@ -40,7 +45,7 @@ class ExceptionHandler
                             '"%s" (%s) for "%s"',
                             $errorSpec['error']['message'],
                             $errorSpec['error']['status'],
-                            $sheet['sheetTitle']
+                            $config->getSheetTitle()
                         ),
                         0,
                         $e
@@ -69,14 +74,14 @@ class ExceptionHandler
         );
     }
 
-    public function handleExportException(\Throwable $e, array $sheet): void
+    public function handleExportException(\Throwable $e, Config $config): void
     {
         if (($e instanceof RequestException) && ($e->getResponse() !== null)) {
             throw new UserException(
                 sprintf(
                     "Error importing file - sheet: '%s - %s'",
-                    $sheet['fileTitle'],
-                    $sheet['sheetTitle']
+                    $config->getFileTitle(),
+                    $config->getSheetTitle()
                 ),
                 400,
                 $e

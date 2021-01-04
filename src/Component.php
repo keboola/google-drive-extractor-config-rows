@@ -22,12 +22,12 @@ class Component extends BaseComponent
     {
         $extractor = new Extractor(
             new Client($this->getGoogleRestApi()),
-            new Output($this->getDataDir()),
+            new Output($this->getDataDir(), $this->getConfig()),
             $this->getLogger()
         );
 
         try {
-            $extractor->run($this->getConfig()->getSheets());
+            $extractor->run($this->getConfig());
         } catch (RequestException $exception) {
             $this->handleException($exception);
         }

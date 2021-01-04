@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Keboola\GoogleDriveExtractor\Extractor;
 
 use Keboola\Csv\CsvWriter;
+use Keboola\GoogleDriveExtractor\Configuration\Config;
 
 class Output
 {
@@ -14,26 +15,26 @@ class Output
 
     private ?array $header;
 
-    private array $sheetCfg;
+    private Config $config;
 
-    public function __construct(string $dataDir)
+    public function __construct(string $dataDir, Config $config)
     {
         $this->dataDir = $dataDir;
+        $this->config = $config;
     }
 
-    public function createCsv(array $sheet): string
+    public function createCsv(): string
     {
         $outTablesDir = $this->dataDir . '/out/tables';
         if (!is_dir($outTablesDir)) {
             mkdir($outTablesDir, 0777, true);
         }
 
-        $filename = $outTablesDir . '/' . $sheet['fileId'] . '_' . $sheet['sheetId'] . '.csv';
+        $filename = $outTablesDir . '/' . $this->config->getFileId() . '_' . $this->config->getSheetId() . '.csv';
         touch($filename);
 
         $this->csv = new CsvWriter($filename);
         $this->header = null;
-        $this->sheetCfg = $sheet;
 
         return $filename;
     }
@@ -44,8 +45,9 @@ class Output
             return;
         }
 
+        $headerConfig = $this->config->getHeader();
         if ($this->header === null) {
-            $headerRowNum = $this->sheetCfg['header']['rows'] - 1;
+            $headerRowNum = $headerConfig['rows'] - 1;
             $this->header = $data[$headerRowNum];
             $headerLength = $this->getHeaderLength($data, (int) $headerRowNum);
         } else {
@@ -54,8 +56,8 @@ class Output
 
         foreach ($data as $k => $row) {
             // backward compatibility fix
-            if ($this->sheetCfg['header']['rows'] === 1 && $k === 0 && $offset === 1) {
-                if (!isset($this->sheetCfg['header']['sanitize']) || $this->sheetCfg['header']['sanitize'] !== false) {
+            if ($headerConfig['rows'] === 1 && $k === 0 && $offset === 1) {
+                if (!isset($headerConfig['sanitize']) || $headerConfig['sanitize'] !== false) {
                     $row = $this->normalizeCsvHeader($row);
                 }
             }
@@ -67,7 +69,7 @@ class Output
         }
     }
 
-    public function createManifest(string $filename, string $outputTable): bool
+    public function createManifest(string $filename): bool
     {
         $outFilename = $filename . '.manifest';
 

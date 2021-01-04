@@ -9,7 +9,7 @@
         convertWarningsToExceptions="true"
         processIsolation="false"
         bootstrap="tests/phpunit/bootstrap.php"
-        stopOnFailure="false"
+        stopOnFailure="true"
         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
 >
   <coverage processUncoveredFiles="true">

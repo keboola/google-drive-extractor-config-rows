@@ -6,6 +6,7 @@ namespace Keboola\GoogleDriveExtractor\Tests\Extractor;
 
 use Keboola\Component\Logger;
 use Keboola\Google\ClientBundle\Google\RestApi;
+use Keboola\GoogleDriveExtractor\Configuration\Config;
 use Keboola\GoogleDriveExtractor\Extractor\Extractor;
 use Keboola\GoogleDriveExtractor\Extractor\Output;
 use Keboola\GoogleDriveExtractor\GoogleDrive\Client;
@@ -22,7 +23,7 @@ class ExtractorTest extends TestCase
         $api = new RestApi((string) getenv('CLIENT_ID'), (string) getenv('CLIENT_SECRET'));
         $api->setCredentials((string) getenv('ACCESS_TOKEN'), (string) getenv('REFRESH_TOKEN'));
         $this->googleDriveClient = new Client($api);
-        $output = new Output('/data');
+        $output = new Output('/data', new Config([]));
         $this->extractor = new Extractor($this->googleDriveClient, $output, new Logger());
     }
 
