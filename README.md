@@ -52,10 +52,10 @@ App is developed on localhost using TDD.
 
 1. Clone from repository: `git clone git@github.com:keboola/google-drive-extractor.git`
 2. Change directory: `cd google-drive-extractor`
-3. Install dependencies: `composer install --no-interaction`
-4. Create `tests.sh` file from template `tests.sh.template`. 
+3. Build docker image: `docker-compose build`
+4. Install dependencies: `docker-compose run --rm dev composer install --no-scripts`
 5. You will need working OAuth credentials. 
     - Go to Googles [OAuth 2.0 Playground](https://developers.google.com/oauthplayground). 
     - In the configuration (the cog wheel on the top right side) check `Use your own OAuth credentials` and paste your OAuth Client ID and Secret.
     - Go through the authorization flow and generate `Access` and `Refresh` tokens. Copy and paste them into the `tests.sh` file.    
-6. Run the tests: `./tests.sh`
+5. Run the tests: `docker-compose run --rm dev composer tests`
