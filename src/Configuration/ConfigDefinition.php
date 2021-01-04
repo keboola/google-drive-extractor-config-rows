@@ -14,10 +14,6 @@ class ConfigDefinition extends BaseConfigDefinition
         $parametersNode = parent::getParametersDefinition();
         $parametersNode
             ->children()
-                ->integerNode('id')
-                    ->isRequired()
-                    ->min(0)
-                ->end()
                 ->scalarNode('fileId')
                     ->isRequired()
                     ->cannotBeEmpty()

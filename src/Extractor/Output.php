@@ -30,7 +30,7 @@ class Output
             mkdir($outTablesDir, 0777, true);
         }
 
-        $filename = $outTablesDir . '/' . $this->config->getFileId() . '_' . $this->config->getSheetId() . '.csv';
+        $filename = $outTablesDir . '/' . $this->config->getOutputTable() . '.csv';
         touch($filename);
 
         $this->csv = new CsvWriter($filename);

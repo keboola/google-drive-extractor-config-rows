@@ -1,0 +1,13 @@
+{
+  "parameters": {
+    "fileId": null,
+    "fileTitle": null,
+    "sheetId": null,
+    "sheetTitle": null,
+    "header": {
+      "rows": 1,
+      "sanitize": false
+    },
+    "outputTable": "not-sanitize"
+  }
+}

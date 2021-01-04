@@ -1,13 +1,12 @@
 {
   "parameters": {
-    "id": 0,
     "fileId": null,
     "fileTitle": null,
-    "sheetId": null,
+    "sheetId": 18293729,
     "sheetTitle": null,
-    "outputTable": null,
     "header": {
       "rows": 1
-    }
+    },
+    "outputTable": "titanic-output"
   }
 }
