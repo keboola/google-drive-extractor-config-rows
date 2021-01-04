@@ -1,5 +1,4 @@
 parameters:
     checkMissingIterableValueType: false
-    excludes_analyse:
-        - src/Keboola/GoogleDriveExtractor/Configuration/ConfigDefinition.php
     ignoreErrors:
+        - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::children\(\)\.#'

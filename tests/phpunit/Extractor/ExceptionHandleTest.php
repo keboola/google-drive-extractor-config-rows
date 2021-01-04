@@ -7,8 +7,8 @@ namespace Keboola\GoogleDriveExtractor\Tests\Extractor;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use Keboola\Component\UserException;
 use Keboola\GoogleDriveExtractor\Exception\ApplicationException;
-use Keboola\GoogleDriveExtractor\Exception\UserException;
 use Keboola\GoogleDriveExtractor\Extractor\ExceptionHandler;
 use PHPUnit\Framework\TestCase;
 

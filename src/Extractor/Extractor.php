@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Keboola\GoogleDriveExtractor\Extractor;
 
-use Keboola\GoogleDriveExtractor\Exception\UserException;
+use Keboola\Component\UserException;
 use Keboola\GoogleDriveExtractor\GoogleDrive\Client;
-use Monolog\Logger;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
 
 class Extractor
 {
@@ -15,9 +15,9 @@ class Extractor
 
     private Output $output;
 
-    private Logger $logger;
+    private LoggerInterface $logger;
 
-    public function __construct(Client $driveApi, Output $output, Logger $logger)
+    public function __construct(Client $driveApi, Output $output, LoggerInterface $logger)
     {
         $this->driveApi = $driveApi;
         $this->logger = $logger;

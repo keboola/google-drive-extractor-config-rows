@@ -4,23 +4,16 @@ declare(strict_types=1);
 
 namespace Keboola\GoogleDriveExtractor\Configuration;
 
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Keboola\Component\Config\BaseConfigDefinition;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 
-class ConfigDefinition implements ConfigurationInterface
+class ConfigDefinition extends BaseConfigDefinition
 {
-    public function getConfigTreeBuilder(): TreeBuilder
+    protected function getParametersDefinition(): ArrayNodeDefinition
     {
-        $treeBuilder = new TreeBuilder('parameters');
-
-        $treeBuilder->getRootNode()
+        $parametersNode = parent::getParametersDefinition();
+        $parametersNode
             ->children()
-                ->scalarNode('outputBucket')
-                ->end()
-                ->scalarNode('data_dir')
-                    ->isRequired()
-                    ->cannotBeEmpty()
-                ->end()
                 ->arrayNode('sheets')
                     ->isRequired()
                     ->prototype('array')
@@ -89,6 +82,6 @@ class ConfigDefinition implements ConfigurationInterface
                 ->end()
             ->end();
 
-        return $treeBuilder;
+        return $parametersNode;
     }
 }
