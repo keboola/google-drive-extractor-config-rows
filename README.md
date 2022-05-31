@@ -59,3 +59,7 @@ App is developed on localhost using TDD.
     - In the configuration (the cog wheel on the top right side) check `Use your own OAuth credentials` and paste your OAuth Client ID and Secret.
     - Go through the authorization flow and generate `Access` and `Refresh` tokens. Copy and paste them into the `tests.sh` file.    
 5. Run the tests: `docker-compose run --rm dev composer tests`
+
+## License
+
+MIT licensed, see [LICENSE](./LICENSE) file.
