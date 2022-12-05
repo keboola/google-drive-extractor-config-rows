@@ -1,4 +1,4 @@
-# google-drive-extractor
+# google-drive-extractor based on configRows configurations
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/keboola/google-drive-extractor/blob/master/LICENSE.md)
 
