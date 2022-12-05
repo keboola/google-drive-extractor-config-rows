@@ -9,7 +9,7 @@
     "ext-json": "*",
     "guzzlehttp/guzzle": "^6.0",
     "keboola/csv": "^2.1",
-    "keboola/google-client-bundle": "^5.1",
+    "keboola/google-client-bundle": "^5.3",
     "keboola/php-component": "^8.1",
     "keboola/php-temp": "^2.0",
     "monolog/monolog": "^2.2",
