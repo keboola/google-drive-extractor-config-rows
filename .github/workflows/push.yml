@@ -110,21 +110,23 @@ jobs:
           componentId: ${{ env.KBC_DEVELOPERPORTAL_APP }}
           tag: ${{ needs.build.outputs.app_image_tag }}
           configs: ${{ env.KBC_TEST_PROJECT_CONFIGS }}
-
-  deploy:
-    needs:
-      - build
-      - tests
-      - tests-in-kbc
-    runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/') && needs.build.outputs.is_semantic_tag == 'true'
-    steps:
-      -
-        name: Set tag in the Deloper Portal
-        uses: keboola/action-set-tag-developer-portal@master
-        with:
-          vendor: ${{ env.KBC_DEVELOPERPORTAL_VENDOR }}
-          app_id: ${{ env.KBC_DEVELOPERPORTAL_APP }}
-          username: ${{ env.KBC_DEVELOPERPORTAL_USERNAME }}
-          password: ${{ env.KBC_DEVELOPERPORTAL_PASSWORD }}
-          tag: ${{ needs.build.outputs.app_image_tag }}
+          
+#  ConfigRows is not ready - Deploy must be disabled
+#  deploy:
+#    needs:
+#      - build
+#      - tests
+#      - tests-in-kbc
+#    runs-on: ubuntu-latest
+#    if: startsWith(github.ref, 'refs/tags/') && needs.build.outputs.is_semantic_tag == 'true'
+#    steps:
+#      -
+#        name: Set tag in the Deloper Portal
+#        uses: keboola/action-set-tag-developer-portal@master
+#        with:
+#          vendor: ${{ env.KBC_DEVELOPERPORTAL_VENDOR }}
+#          app_id: ${{ env.KBC_DEVELOPERPORTAL_APP }}
+#          username: ${{ env.KBC_DEVELOPERPORTAL_USERNAME }}
+#          password: ${{ env.KBC_DEVELOPERPORTAL_PASSWORD }}
+#          tag: ${{ needs.build.outputs.app_image_tag }}
+#
